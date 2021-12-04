@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đăng ký người dùng{% endblock %}
+
+{% block content %}
+    <form method="post" action="{{ url_for('user_register') }}">
+        <div class="form-group">
+            <label for="first-name">Họ Của Bạn:</label>
+            <input type="text" class="form-control" placeholder="Nhập họ của bạn" id="first-name">
+        </div>
+        <div class="form-group">
+            <label for="last-name">Tên Của Bạn:</label>
+            <input type="text" class="form-control" placeholder="Nhập tên của bạn" id="last-name">
+        </div>
+        <div class="form-group">
+            <label for="user-name">Tên Đăng Nhập:</label>
+            <input type="text" class="form-control" placeholder="Nhập tên đăng nhập" id="user-name">
+        </div>
+        <div class="form-group">
+            <label for="email">Email Của Bạn:</label>
+            <input type="email" class="form-control" placeholder="Nhập email của bạn" id="email">
+        </div>
+        <div class="form-group">
+            <label for="password">Mật Khẩu:</label>
+            <input type="password" class="form-control" placeholder="Nhập mật khẩu" id="password">
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Nhập Lại Mật Khẩu:</label>
+            <input type="password" class="form-control" placeholder="Nhập lại mật khẩu" id="confirm-password">
+        </div>
+        <button type="submit" class="btn btn-primary">Đăng ký</button>
+    </form>
+{% endblock %}
