@@ -1,0 +1,23 @@
+.row {
+    height: 100vh;
+}
+
+.card-title {
+    margin-top: 10px;
+}
+
+input[type="text"], input[type="password"] {
+    background-color: #f4f5fa;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    background-color: #f4f5fa;
+}
+
+.login-option {
+    margin-top: 35px;
+    display: flex;
+    margin-bottom: 50px;
+    justify-content: space-between;
+}
