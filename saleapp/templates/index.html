@@ -4,6 +4,11 @@
 
 {% block content %}
     <h1>Trang chu</h1>
-    <a href="{{ url_for('user_login') }}">Đăng ký</a>
-    <a href="{{ url_for('user_register') }}">Đăng nhập</a>
+    {% if current_user.is_authenticated %}
+        <h1>Welcome {{ current_user.last_name }} {{ current_user.first_name }}</h1>
+        <a href="{{ url_for('user_signout') }}">Đăng xuất</a>
+    {% else %}
+        <a href="{{ url_for('user_login') }}">Đăng nhập</a>
+        <a href="{{ url_for('user_register') }}">Đăng ký</a>
+    {% endif %}
 {% endblock %}
