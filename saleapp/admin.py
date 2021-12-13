@@ -29,5 +29,5 @@ class LogoutView(BaseView):
         return current_user.is_authenticated
 
 
-admin.add_view(AuthenticatedView(User, db.session))
-admin.add_view(LogoutView(name='Đăng xuất'))
+admin.add_view(AuthenticatedView(User, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(LogoutView(name='Signou', menu_icon_type='fa', menu_icon_value='fa-sign-out'))

@@ -1,21 +1,19 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin/master.html' %}
 
 {% block head_css %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 {% endblock %}
 
 {% block body %}
     {% if current_user.is_authenticated %}
         <h1>Welcome {{ current_user.last_name }} {{ current_user.first_name }} to Administrator</h1>
     {% else %}
-        <div class="d-flex flex-column justify-content-center align-items-center"
-            style="margin-top: 5rem">
-        {% if error_message %}
-            <div class="alert alert-danger">
-                <h3>{{ error_message }}</h3>
-            </div>
-        {% endif %}
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            {% if error_message %}
+                <div class="alert alert-danger">
+                    <h3>{{ error_message }}</h3>
+                </div>
+            {% endif %}
             <div class="col-md-4 col-xs-12 grid-margin stretch-card">
                 <div class="card  shadow p-3 mb-5">
                     <div class="card-body">
@@ -65,7 +63,3 @@
     {% endif %}
 {% endblock %}
 
-{% block tail_js %}
-    {{ super() }}}
-    <script src="https://kit.fontawesome.com/20000fcd31.js" crossorigin="anonymous"></script>
-{% endblock %}
