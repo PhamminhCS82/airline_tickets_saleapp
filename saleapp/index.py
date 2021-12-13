@@ -1,6 +1,6 @@
-from saleapp import app, utils, login
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, url_for
 from flask_login import login_user, logout_user
+from saleapp import app, utils, login
 from models import UserRole
 
 
@@ -31,9 +31,8 @@ def admin_login():
     if request.method.__eq__('POST'):
         user_name = request.form.get('user-name')
         password = request.form.get('password')
-        user = utils.check_login(user_name=user_name,
-                                 password=password,
-                                 role=UserRole.ADMIN)
+        user = utils.check_login(user_name=user_name, password=password, role=UserRole.ADMIN)
+
         if user:
             login_user(user)
     return redirect('/admin')
@@ -45,7 +44,7 @@ def load_user(user_id):
 
 
 @app.route('/logout')
-def user_signout():
+def user_logout():
     logout_user()
     return redirect(url_for('index'))
 

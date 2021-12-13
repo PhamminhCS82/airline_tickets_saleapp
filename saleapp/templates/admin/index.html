@@ -8,7 +8,6 @@
 {% block body %}
     {% if current_user.is_authenticated %}
         <h1>Welcome {{ current_user.last_name }} {{ current_user.first_name }} to Administrator</h1>
-        <a href="{{ url_for('user_signout') }}">Đăng xuất</a>
     {% else %}
         <div class="d-flex flex-column justify-content-center align-items-center"
             style="margin-top: 5rem">
@@ -32,6 +31,7 @@
                                        name="user-name"
                                        id="user-name"
                                        placeholder="Nhập tên đăng nhập"
+                                       required
                                        style="background-color: #f4f5fa"
                                 >
                             </div>
@@ -42,6 +42,7 @@
                                         class="form-control"
                                         name="password" id="password"
                                         placeholder="Nhập mật khẩu"
+                                        required
                                         style="background-color: #f4f5fa;"
                                 >
                             </div>
@@ -62,4 +63,9 @@
             </div>
         </div>
     {% endif %}
+{% endblock %}
+
+{% block tail_js %}
+    {{ super() }}}
+    <script src="https://kit.fontawesome.com/20000fcd31.js" crossorigin="anonymous"></script>
 {% endblock %}

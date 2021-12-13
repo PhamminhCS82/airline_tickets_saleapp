@@ -29,15 +29,20 @@ class User(BaseMode, UserMixin):
     user_role = Column(Enum(UserRole), default=UserRole.USER)
 
 
-# if __name__ == '__main__':
-    # db.create_all()
+if __name__ == '__main__':
+    db.create_all()
     #
     # password = str(hashlib.md5("abcd1234".encode('utf-8')).hexdigest())
     # admin1 = User(last_name="Tat Quang", first_name="Kiet", user_name="admin",
     #               password=password, email='tatquangkiet@gmail.com',
     #               image='https://res.cloudinary.com/dnwauajh9/image/upload/v1638608909/admin-image_dnghms.jpg',
     #               user_role=UserRole.ADMIN)
+    # admin2 = User(last_name="Trần Thị", first_name="Nở", user_name="user",
+    #               password=password, email='publicmail1009@gmail.com',
+    #               image='https://res.cloudinary.com/dnwauajh9/image/upload/v1639316867/download_bliziv.png',
+    #               user_role=UserRole.USER)
     #
     # db.session.add(admin1)
+    # db.session.add(admin2)
     # db.session.commit()
-    db.metadata.clear()
+    # db.metadata.clear()

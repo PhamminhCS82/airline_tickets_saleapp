@@ -10,6 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234567890@localho
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['PAGE_SIZE'] = 8
 app.config['FLASK_ADMIN_FLUID_LAYOUT'] = True
+# app.config['SQLALCHEMY_RECORDED_QUERIES'] = True
 
 cloudinary.config(
   cloud_name = "dnwauajh9",
