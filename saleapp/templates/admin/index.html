@@ -6,60 +6,7 @@
 
 {% block body %}
     {% if current_user.is_authenticated %}
-        <h1>Welcome {{ current_user.last_name }} {{ current_user.first_name }} to Administrator</h1>
-    {% else %}
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            {% if error_message %}
-                <div class="alert alert-danger">
-                    <h3>{{ error_message }}</h3>
-                </div>
-            {% endif %}
-            <div class="col-md-4 col-xs-12 grid-margin stretch-card">
-                <div class="card  shadow p-3 mb-5">
-                    <div class="card-body">
-                        <h4 class="card-title" style="margin-top: 10px">Xin chào</h4>
-                        <p class="card-description">
-                            Đăng nhập vào tài khoản của bạn
-                        </p>
-                        <form class="forms-sample" method="post" action="{{ url_for('admin_login') }}">
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="user-name">Tên đăng nhập</label>
-                                <input type="text"
-                                       class="form-control"
-                                       name="user-name"
-                                       id="user-name"
-                                       placeholder="Nhập tên đăng nhập"
-                                       required
-                                       style="background-color: #f4f5fa"
-                                >
-                            </div>
-                            <div class="form-group">
-                                <label class="font-weight-bold" for="password">Mật khẩu</label>
-                                <input
-                                        type="password"
-                                        class="form-control"
-                                        name="password" id="password"
-                                        placeholder="Nhập mật khẩu"
-                                        required
-                                        style="background-color: #f4f5fa;"
-                                >
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
-                                <label class="form-check-label" for="remember-me">Ghi nhớ đăng nhập</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary mr-2">Đăng nhập</button>
-                        </form>
-                        <div class="d-flex justify-content-between"
-                             style="margin-top: 35px;margin-bottom: 50px"
-                        >
-                            <a href="#">Bạn quên mật khẩu?</a>
-                            <a href="{{ url_for('user_register') }}">Tạo tài khoản mới</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+         <h1>Welcome {{ current_user.last_name }} {{ current_user.first_name }} to Administrator</h1>
     {% endif %}
 {% endblock %}
 

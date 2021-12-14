@@ -26,7 +26,7 @@ def user_login():
     return render_template('login.html', error_message=error_message)
 
 
-@app.route('/admin-login', methods=['post'])
+@app.route('/adminLogin', methods=['post', 'get'])
 def admin_login():
     if request.method.__eq__('POST'):
         user_name = request.form.get('user-name')
@@ -35,7 +35,14 @@ def admin_login():
 
         if user:
             login_user(user)
-    return redirect('/admin')
+            destination = request.args.get('next')
+            fallback = url_for('admin.index')
+            try:
+                destination_url = url_for(destination)
+                return redirect(destination_url)
+            except:
+                return  redirect(fallback)
+    return render_template('admin-login.html')
 
 
 @login.user_loader

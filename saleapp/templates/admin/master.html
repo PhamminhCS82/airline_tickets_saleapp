@@ -71,22 +71,23 @@
                                     {{ layout.menu_links() }}
                                 </ul>
                             {% endblock %}
+                            {% block access_control %}{% endblock %}
                         </div>
                     </div>
                 </nav>
-
-                {% block access_control %}{% endblock %}
 
                 {% block messages %}
                     {{ layout.messages() }}
                 {% endblock %}
 
                 {% set render_ctx = h.resolve_ctx() %}
+
                 <div class="row">
                     <div class="col-md-10">
-                        {% block body %} {% endblock %}
+                        {% block body %}{% endblock %}
                     </div>
                 </div>
+
             </div>
         {% endblock %}
     </div>

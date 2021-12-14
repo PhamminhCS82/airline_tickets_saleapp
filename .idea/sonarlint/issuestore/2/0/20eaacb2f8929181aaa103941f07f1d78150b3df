@@ -1,2 +1,3 @@
 
-_python:S2208:"GImport only needed names or import the module and then use its members.(Ì–ª¯
+_python:S2208A"GImport only needed names or import the module and then use its members.(Ì–ª¯
+Tpython:S5754+"<Specify an exception class to catch or reraise the exception(ˆÊÉ·
