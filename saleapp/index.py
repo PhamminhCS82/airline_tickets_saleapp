@@ -19,30 +19,17 @@ def user_login():
 
         if user:
             login_user(user)
-            return redirect(url_for('index'))
+            return redirect(url_for(request.args.get('next', 'index')))
         else:
-            error_message = 'Tên đăng nhập hoặc mật khẩu không hợp lệ'
-
+            ad = utils.check_login(user_name=user_name, password=password, role=UserRole.ADMIN)
+            if ad:
+                login_user(ad)
+                return redirect(url_for(request.args.get('next', 'admin.index')))
+            error_message = 'Tài khoản hoặc mật khẩu không đúng'
     return render_template('login.html', error_message=error_message)
 
 
-@app.route('/adminLogin', methods=['post', 'get'])
-def admin_login():
-    if request.method.__eq__('POST'):
-        user_name = request.form.get('user-name')
-        password = request.form.get('password')
-        user = utils.check_login(user_name=user_name, password=password, role=UserRole.ADMIN)
 
-        if user:
-            login_user(user)
-            destination = request.args.get('next')
-            fallback = url_for('admin.index')
-            try:
-                destination_url = url_for(destination)
-                return redirect(destination_url)
-            except:
-                return  redirect(fallback)
-    return render_template('admin-login.html')
 
 
 @login.user_loader

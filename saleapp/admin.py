@@ -10,7 +10,7 @@ from flask_login import logout_user, current_user
 class AuthenticatedView(ModelView):
     def is_accessible(self):
         return current_user.is_authenticated and \
-               current_user.user_role.__eq__(UserRole.ADMIN)
+               current_user.user_role == UserRole.ADMIN
 
 
 class LogoutView(BaseView):
@@ -21,16 +21,16 @@ class LogoutView(BaseView):
 
     def is_accessible(self):
         return current_user.is_authenticated and \
-               current_user.user_role.__eq__(UserRole.ADMIN)
+               current_user.user_role == UserRole.ADMIN
 
 
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
     def index(self):
-        if current_user.is_authenticated:
+        if current_user.is_authenticated and current_user.user_role == UserRole.ADMIN:
             return super(MyAdminIndexView, self).index()
         next_url = request.endpoint
-        login_url = '%s?next=%s' % (url_for('admin_login'), next_url)
+        login_url = '%s?next=%s' % (url_for('user_login'), next_url)
         return redirect(login_url)
 
 
