@@ -21,15 +21,12 @@ def user_login():
             login_user(user)
             return redirect(url_for(request.args.get('next', 'index')))
         else:
-            ad = utils.check_login(user_name=user_name, password=password, role=UserRole.ADMIN)
-            if ad:
-                login_user(ad)
+            admin = utils.check_login(user_name=user_name, password=password, role=UserRole.ADMIN)
+            if admin:
+                login_user(admin)
                 return redirect(url_for(request.args.get('next', 'admin.index')))
             error_message = 'Tài khoản hoặc mật khẩu không đúng'
     return render_template('login.html', error_message=error_message)
-
-
-
 
 
 @login.user_loader
