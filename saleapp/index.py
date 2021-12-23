@@ -45,6 +45,11 @@ def user_register():
     return render_template('register.html')
 
 
+@app.route('/about')
+def contact_us():
+    return render_template('contact.html')
+
+
 if __name__ == '__main__':
     from admin import *
     app.run(debug=True)
