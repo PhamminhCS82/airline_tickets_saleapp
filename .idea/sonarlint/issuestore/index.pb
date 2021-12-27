@@ -11,14 +11,10 @@ $saleapp/templates/layout/footer.html,a\7\a70cea6c9b594d6c96192ff61adb3cf805b83
 saleapp/utils.py,a\b\abea3b334ba5979e114f82576314e2a7036243c7
 L
 saleapp/static/css/style.css,3\6\3676010bdd25e0a831c8bf632993e8fdbd3cccca
-R
-"saleapp/templates/layout/base.html,c\c\cc4be2b82cc8ceed7bc65b2a8ffa031fb06b93e1
 L
 saleapp/static/css/admin.css,f\c\fca2a0ed571ad5b8e3b4fa732883ba1867912095
 S
 #saleapp/templates/admin/master.html,3\d\3d4b2f12a76fceacd966f180c11b73377141377d
-R
-"saleapp/templates/admin-login.html,1\9\192b5cb8e3f7ac1b6e30aa48d1a12313b6b8f615
 C
 saleapp/__init__.py,1\3\134a72da98e83be1bd757bd653ca5b3a0baaa66f
 O
@@ -29,11 +25,19 @@ R
 saleapp/admin.py,1\7\17978e81fa198eb9500b7a243b4fe8d4436dd894
 A
 saleapp/models.py,5\8\5868c60e84c8b7a8aa421ace45b70c43d2003c80
-L
-saleapp/templates/login.html,d\9\d9023252178d69863cf55e4bfacbf051cc470acf
 N
 saleapp/templates/contact.html,f\e\fe059e343d2a164199089d0bc6412f5adc23b4ae
+N
+saleapp/static/css/contact.css,c\3\c3633aea1a56e30a67abaf395a76c07562cfe5b2
 @
 saleapp/index.py,2\0\20eaacb2f8929181aaa103941f07f1d78150b3df
 L
 saleapp/templates/index.html,0\d\0d837b7e10c77f8b88d677c3aebb836abf717550
+M
+saleapp/templates/navbar.html,8\7\87afc01058f0b4276b471285467fee208f2977cf
+R
+"saleapp/templates/layout/base.html,c\c\cc4be2b82cc8ceed7bc65b2a8ffa031fb06b93e1
+L
+saleapp/templates/login.html,d\9\d9023252178d69863cf55e4bfacbf051cc470acf
+M
+saleapp/templates/ticket.html,c\f\cff0abd2b129c370da79ed2a654068bb5781cb38

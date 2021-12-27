@@ -50,6 +50,11 @@ def contact_us():
     return render_template('contact.html')
 
 
+@app.route('/ticket')
+def book_ticket():
+    return render_template('ticket.html')
+
+
 if __name__ == '__main__':
     from admin import *
     app.run(debug=True)

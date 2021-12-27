@@ -2,10 +2,14 @@
 
 {% block title %}Thông tin về chúng tôi{% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="container">
-        <h1 class="text-center">Thông tin thành viên</h1>
-        <div class="row d-flex justify-content-around mt-5">
+        <h1 class="mx-auto mt-3">Thông tin thành viên</h1>
+        <div class="row d-flex justify-content-around mt-4">
             <div class="col-md-4 rounded">
                 <div class="shadow p-2">
                     <img src="{{ url_for('static', filename='images/tqk.jpg') }}"
