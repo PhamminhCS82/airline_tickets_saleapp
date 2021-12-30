@@ -3,74 +3,100 @@
 {% block title %}Đặt vé{% endblock %}
 
 {% block js %}
-    <script>
-        window.onload = () => {
-            document.getElementById('returnDay').disabled = true;
-        }
-
-        const handleChange = (src) => {
-            if(src.value === 'oneTrip')
-                document.getElementById('returnDay').disabled = true;
-            else
-                document.getElementById('returnDay').disabled = false;
-        }
-    </script>
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/ticket.js') }}"></script>
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-2">
-        <div class="row">
-            <div class="col-md-6" style="background-color: red">
-                <h1>Bên đây hiện vài cái hình về chuyến bay</h1>
-            </div>
-
-            <div class="col-md-6">
-                <div class="w-80 shadow" style="background-color: antiquewhite">
-                    <form method="post" action="">
-                        <div  id="type-of-flight">
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio"
-                                       class="custom-control-input"
-                                       id="oneTrip"
-                                       name="typeOfFlight"
-                                       value="oneTrip"
-                                       checked
-                                       onchange="handleChange(this)"
-                                >
-                                <label class="custom-control-label" for="oneTrip">Một chuyến</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio"
-                                       class="custom-control-input"
-                                       id="roundTrip"
-                                       name="typeOfFlight"
-                                       value="roundTrip"
-                                       onchange="handleChange(this)"
-                                >
-                                <label class="custom-control-label" for="roundTrip">Khứ hồi</label>
-                            </div>
+    <div style="background-image: url('static/images/jet_herd.jpg'); background-repeat: no-repeat; background-size: cover">
+        <div class="container d-flex align-items-center" style="height: 84vh">
+            <div class="row" style="height: 55vh">
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-center shadow"
+                         style="border-radius: 10px;
+                                backdrop-filter: blur(10px);
+                                background-color: rgba(255, 255, 255, 0.3)"
+                    >
+                        <div class="form-container mt-3 mb-5" style="width: 96%">
+                            <form method="get" action="">
+                                <div class="custom-control custom-radio custom-control-inline mb-3">
+                                    <input type="radio"
+                                           class="custom-control-input"
+                                           id="oneTrip"
+                                           name="typeOfFlight"
+                                           value="oneTrip"
+                                           checked
+                                           onchange="handleChange(this)"
+                                    >
+                                    <label class="custom-control-label" for="oneTrip">Một chuyến</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio"
+                                           class="custom-control-input"
+                                           id="roundTrip"
+                                           name="typeOfFlight"
+                                           value="roundTrip"
+                                           onchange="handleChange(this)"
+                                    >
+                                    <label class="custom-control-label" for="roundTrip">Khứ hồi</label>
+                                </div>
+                                <div class="form-group d-flex justify-content-between">
+                                    <label class="font-weight-bold">
+                                        <i class="fa fa-plane" aria-hidden="true"></i>
+                                        Điểm khởi hành:
+                                    </label>
+                                    <input type="text" required name="" placeholder="Điểm khởi hành">
+                                </div>
+                                <div class="form-group d-flex justify-content-between">
+                                    <label class="font-weight-bold">
+                                        <i class="fas fa-plane-arrival"></i>
+                                        Điểm đến:
+                                    </label>
+                                    <input type="text" required name="" placeholder="Điểm đến">
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold"
+                                           style="width: 143px">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Ngày đi:
+                                    </label>
+                                    <input type="date" required name="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold"
+                                           style="width: 143px"
+                                    >
+                                        <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                                        Ngày về:
+                                    </label>
+                                    <input type="date" required name="" id="returnDay">
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold"
+                                           style="width: 143px"
+                                    >
+                                        <i class="fas fa-couch"></i>
+                                        Hạng ghế:
+                                    </label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option value="1" selected>Hạng thương gia</option>
+                                        <option value="2">Hạng phổ thông</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2 mt-2">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                    Tìm chuyến bay
+                                </button>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold">Điểm khởi hành</label>
-                            <input type="text" name="" placeholder="Điểm khởi hành">
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold">Điểm đến</label>
-                            <input type="text" name="" placeholder="Điểm đến">
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold">Ngày đi</label>
-                            <input type="date" name="">
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold">Ngày về</label>
-                            <input type="date" name="" id="returnDay">
-                        </div>
-                        <button type="submit" class="btn btn-primary mr-2 mt-2">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                            Tìm chuyến bay
-                        </button>
-                    </form>
+                    </div>
+                </div>
+                <div class="col-md-8"
+                     style="border-radius: 10px;
+                            backdrop-filter: blur(10px);
+                            background-color: rgba(255, 255, 255, 0.3)"
+                >
+                    <h1>Bên đây hiện các chuyến bay mà người dùng đã tìm</h1>
                 </div>
             </div>
         </div>
