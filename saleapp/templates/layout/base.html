@@ -16,17 +16,11 @@
     {% block css %}{% endblock %}
     {% block js %}{% endblock %}
 </head>
-<body style="background-color: #f4f5fa">
-    {% block header %}
-        {% include 'layout/header.html' %}
-    {% endblock %}
-
-    {% include 'navbar.html' %}
+<body>
+    {% include 'layout/header.html' %}
 
     {% block content %}{% endblock %}
 
-    {% block footer %}
-        {% include 'layout/footer.html' %}
-    {% endblock %}
+    {% include 'layout/footer.html' %}
 </body>
 </html>
