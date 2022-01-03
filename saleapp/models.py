@@ -78,6 +78,7 @@ class Ticket(BaseModel):
     seat_quantity = Column(Integer, nullable=False, default=0)
     price = Column(Float, default=0)
     ticket_class = relationship(SeatClass, backref='ticket', lazy=True)
+    ticket_details = relationship('TicketDetail', backref='ticket', lazy=True)
 
 
 class IntermediateAirport(db.Model):

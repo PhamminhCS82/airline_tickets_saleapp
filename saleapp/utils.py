@@ -1,7 +1,7 @@
 import hashlib
-from models import User, UserRole, FlightSchedule, Airport, FlightSchedule, SeatClass
+from models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetail
 from saleapp import db
-
+from flask_login import current_user
 
 def check_login(user_name, password, role=UserRole.USER):
     if user_name and password:
@@ -46,3 +46,23 @@ def add_schedule(id, departure, destination, flight_datetime, flight_time):
 
 def get_all_schedule():
     return FlightSchedule.query.all()
+
+
+def add_receipt(cart):
+    if cart:
+        receipt = Receipt(user=current_user)
+        ticket = db.session.get('ticket')
+        db.session.add(receipt)
+
+        for c in cart.values():
+            d = TicketDetail(receipt=receipt,
+                             ticket=ticket,
+                             user_name=c['name'],
+                             passport=c['passport'],
+                             telephone=c['telephone'],
+                             ticket_class=c['ticket-class'],
+                             price=c['price']
+                             )
+            db.session.add(d)
+
+        db.session.commit()

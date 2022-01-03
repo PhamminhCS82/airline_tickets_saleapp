@@ -174,7 +174,33 @@ def add_to_receipt():
         cart.add(receipt)
         session['cart'] = cart
 
-        return jsonify(utils.cart_stats(session.get('cart')))
+        return jsonify(session.get('cart'))
+
+
+@app.route('/api/add-ticket', methods=['post'])
+def add_ticket_detail():
+    data = request.json
+    name = str(data.get('name'))
+    passport = str(data.get('passport'))
+    telephone = str(data.get('telephone'))
+    ticket_class = str(data.get('ticket-class'))
+    price = str(data.get('price'))
+    cart = session.get('cart')
+    if not cart:
+        cart = {}
+    if passport in cart:
+        return jsonify(session.get('cart'))
+    else:
+        cart[passport] = {
+            'name': name,
+            'price': price,
+            'passport': passport,
+            'telephone': telephone,
+            'ticket-class': ticket_class
+        }
+        session['cart'] = cart
+
+        return jsonify(cart[passport])
 
 
 @app.route('/cart')

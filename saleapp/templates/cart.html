@@ -1,6 +1,45 @@
 {% extends 'layout/base.html' %}
 
 {% block title %}Thông tin vé{% endblock %}
+{% block js %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+{% endblock %}
 {% block content %}
-<h1>Giỏ hàng</h1>
+<h1 class="text-center text-info">Thêm vé</h1>
+<div class="form-group">
+    <label for="name">Họ và tên</label>
+    <input type="text" class="form-control" placeholder="Nhập họ và tên" id="name">
+</div>
+<div class="form-group">
+    <label for="passport">Passport</label>
+    <input type="tel" class="form-control" placeholder="CMND/Hộ Chiếu" id="passport">
+</div>
+<div class="form-group">
+    <label for="telephone">Điện thoại</label>
+    <input type="tel" class="form-control" placeholder="Số điện thoại" id="telephone">
+</div>
+<input type="button" value="Thêm vé" onclick="addTicket(document.getElementById('name').value,document.getElementById('passport').value, document.getElementById('telephone').value, 'Hạng 2', '200000')" class="btn btn-danger" />
+<hr>
+<h1 class="text-center text-info">Đơn mua vé</h1>
+
+<table class="table" id="table">
+    <tr>
+        <th>Chuyến bay</th>
+        <th>Hành khách</th>
+        <th>CMND/CCCD</th>
+        <th>Điện thoại</th>
+        <th>Hạng vé</th>
+        <th>Giá tiền</th>
+    </tr>
+
+</table>
+
+<div class="alert alert-info">
+    <h5>Tong san pham: <span id="cartCounter2"></span></h5>
+    <h5>Tong tien: <span id="cartAmount"></span> VND</h5>
+</div>
+
+<input type="button" value="Thanh toan" onclick="pay()" class="btn btn-danger" />
+
 {% endblock %}
