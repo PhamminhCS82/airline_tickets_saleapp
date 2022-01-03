@@ -1,14 +1,15 @@
-function addTicket(name, passport, telephone, ticketClass, price) {
+function addTicket(ticketId ,name, passport, telephone, ticketClass, price) {
     event.preventDefault()
-
+    console.log(ticketId)
     // promise
     fetch('/api/add-ticket', {
         method: 'post',
         body: JSON.stringify({
+            'ticket_id': ticketId,
             'passport': passport,
             'name': name,
             'telephone': telephone,
-            'ticket-class': ticketClass,
+            'ticket_class': ticketClass,
             'price': price
         }),
         headers: {
@@ -23,6 +24,8 @@ function addTicket(name, passport, telephone, ticketClass, price) {
         <td>${data.name}</td>
         <td>${data.passport}</td>
         <td>${data.telephone}</td>
+        <td>${data.ticket_class}</td>
+        <td>${data.price}</td>
     </tr>`
     })
 }

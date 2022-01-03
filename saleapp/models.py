@@ -69,6 +69,9 @@ class SeatClass(BaseModel):
     price = Column(Float, nullable=False)
     seat_class = relationship('Ticket', backref='seat_class', lazy=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Ticket(BaseModel):
     __tablename__ = 'ticket'

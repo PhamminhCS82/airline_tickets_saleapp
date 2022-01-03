@@ -186,10 +186,11 @@ def add_to_receipt():
 @app.route('/api/add-ticket', methods=['post'])
 def add_ticket_detail():
     data = request.json
+    ticket_id = str(data.get('ticket_id'))
     name = str(data.get('name'))
     passport = str(data.get('passport'))
     telephone = str(data.get('telephone'))
-    ticket_class = str(data.get('ticket-class'))
+    ticket_class = str(data.get('ticket_class'))
     price = str(data.get('price'))
     cart = session.get('cart')
     if not cart:
@@ -198,11 +199,12 @@ def add_ticket_detail():
         return jsonify(session.get('cart'))
     else:
         cart[passport] = {
+            'ticket_id': ticket_id,
             'name': name,
             'price': price,
             'passport': passport,
             'telephone': telephone,
-            'ticket-class': ticket_class
+            'ticket_class': ticket_class
         }
         session['cart'] = cart
 
@@ -213,8 +215,7 @@ def add_ticket_detail():
 def cart():
     flight_id = request.args.get('flight_id')
     flight = utils.load_flight(flight_id=flight_id)
-    session['flight'] = flight
-    return render_template('cart.html')
+    return render_template('cart.html', flight=flight)
 
 
 if __name__ == '__main__':

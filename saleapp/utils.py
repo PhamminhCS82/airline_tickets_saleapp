@@ -75,4 +75,4 @@ def add_receipt(cart):
 
 
 def load_flight(flight_id):
-    return FlightSchedule.query.filter(id=flight_id)
+    return FlightSchedule.query.filter(FlightSchedule.id.__eq__(flight_id)).first()

@@ -19,13 +19,25 @@
     <label for="telephone">Điện thoại</label>
     <input type="tel" class="form-control" placeholder="Số điện thoại" id="telephone">
 </div>
-<input type="button" value="Thêm vé" onclick="addTicket(document.getElementById('name').value,document.getElementById('passport').value, document.getElementById('telephone').value, 'Hạng 2', '200000')" class="btn btn-danger" />
+<label for="ticketClass">Hạng vé</label>
+<select class="form-control" id="ticketClass">
+    {% for c in flight.seat_class %}
+    <option value="{{c.price}}" id="{{c.id}}">{{c.ticket_class}}</option>
+    {% endfor %}
+</select>
+<input type="button" value="Thêm vé"
+       onclick="addTicket(
+       document.getElementById('ticketClass').options[document.getElementById('ticketClass').options.selectedIndex].id,
+       document.getElementById('name').value,document.getElementById('passport').value,
+       document.getElementById('telephone').value,
+       document.getElementById('ticketClass').options[document.getElementById('ticketClass').options.selectedIndex].text,
+       document.getElementById('ticketClass').value)"
+       class="btn btn-danger"/>
 <hr>
 <h1 class="text-center text-info">Đơn mua vé</h1>
-
+<h3>Chuyến bay: {{flight.id}}</h3>
 <table class="table" id="table">
     <tr>
-        <th>Chuyến bay</th>
         <th>Hành khách</th>
         <th>CMND/CCCD</th>
         <th>Điện thoại</th>
@@ -40,6 +52,6 @@
     <h5>Tong tien: <span id="cartAmount"></span> VND</h5>
 </div>
 
-<input type="button" value="Thanh toan" onclick="pay()" class="btn btn-danger" />
+<input type="button" value="Thanh toan" onclick="pay()" class="btn btn-danger"/>
 
 {% endblock %}
