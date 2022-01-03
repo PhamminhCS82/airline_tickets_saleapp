@@ -2,125 +2,83 @@
 
 {% block title %}Đặt vé{% endblock %}
 
-{% block js %}
-{{ super() }}
-<script src="{{ url_for('static', filename='js/ticket.js') }}"></script>
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ticket.css') }}">
 {% endblock %}
 
 {% block content %}
-<div style="background-image: url('static/images/jet_herd.jpg');
+    <div class="container-fluid d-flex align-items-center"
+         style="background-image: url('static/images/jet_herd.jpg');
                 background-repeat: no-repeat;
-                background-size: cover"
->
-    <div class="container d-flex align-items-center" style="height: 84vh">
-        <div class="row" style="height: 55vh">
-            <div class="col-md-4">
-                <div class="d-flex justify-content-center shadow"
-                     style="border-radius: 10px;
+                background-size: cover;
+                height: 84vh"
+    >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-center shadow"
+                         style="border-radius: 10px;
                                 backdrop-filter: blur(10px);
-                                background-color: rgba(255, 255, 255, 0.3)"
-                >
-                    <div class="form-container mt-3 mb-5" style="width: 96%">
-                        <form method="get" action="">
-                            <div class="custom-control custom-radio custom-control-inline mb-3">
-                                <input type="radio"
-                                       class="custom-control-input"
-                                       id="oneTrip"
-                                       name="typeOfFlight"
-                                       value="oneTrip"
-                                       checked
-                                       onchange="handleChange(this)"
-                                >
-                                <label class="custom-control-label" for="oneTrip">Một chuyến</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio"
-                                       class="custom-control-input"
-                                       id="roundTrip"
-                                       name="typeOfFlight"
-                                       value="roundTrip"
-                                       onchange="handleChange(this)"
-                                >
-                                <label class="custom-control-label" for="roundTrip">Khứ hồi</label>
-                            </div>
-                            <div class="form-group d-flex justify-content-between">
-                                <label class="font-weight-bold">
-                                    <i class="fa fa-plane" aria-hidden="true"></i>
-                                    Điểm khởi hành:
-                                </label>
-                                <input type="text" list="{{airports}}" required name="departure"
-                                       placeholder="Điểm khởi hành">
-                                <datalist id="{{airports}}">
-                                    {% for a in airports %}
-                                    <option value="{{a.id}}">{{a.name}}</option>
-                                    {% endfor %}
-                                </datalist>
-                            </div>
-                            <div class="form-group d-flex justify-content-between">
-                                <label class="font-weight-bold">
-                                    <i class="fas fa-plane-arrival"></i>
-                                    Điểm đến:
-                                </label>
-                                <input type="text" list="{{airports}}" required name="destination"
-                                       placeholder="Điểm đến">
-                            </div>
-                            <div class="form-group">
-                                <label class="font-weight-bold"
-                                       style="width: 143px">
-                                    <i class="fas fa-calendar-alt"></i>
-                                    Ngày đi:
-                                </label>
-                                <input type="date" required name="">
-                            </div>
-                            <div class="form-group">
-                                <label class="font-weight-bold"
-                                       style="width: 143px"
-                                >
-                                    <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                                    Ngày về:
-                                </label>
-                                <input type="date" required name="" id="returnDay">
-                            </div>
-                            <div class="form-group">
-                                <label class="font-weight-bold"
-                                       style="width: 143px"
-                                >
-                                    <i class="fas fa-couch"></i>
-                                    Hạng ghế:
-                                </label>
-                                <select class="form-select" aria-label="Default select example">
-                                    <option value="1" selected>Hạng thương gia</option>
-                                    <option value="2">Hạng phổ thông</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary mr-2 mt-2">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                                Tìm chuyến bay
-                            </button>
-                        </form>
+                                background-color: rgba(255, 255, 255, 0.3);
+                                height: 51vh"
+                    >
+                        <div class="form-container mt-5 mb-5" style="width: 96%">
+                            <form method="get" action="">
+                                <div class="form-group d-flex justify-content-between">
+                                    <label class="font-weight-bold">
+                                        <i class="fa fa-plane" aria-hidden="true"></i>
+                                        Điểm khởi hành:
+                                    </label>
+                                    <input type="text" required name="" placeholder="Điểm khởi hành">
+                                </div>
+                                <div class="form-group d-flex justify-content-between">
+                                    <label class="font-weight-bold">
+                                        <i class="fas fa-plane-arrival"></i>
+                                        Điểm đến:
+                                    </label>
+                                    <input type="text" required name="" placeholder="Điểm đến">
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold"
+                                           style="width: 143px">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Ngày đi:
+                                    </label>
+                                    <input type="date" required name="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold"
+                                           style="width: 143px"
+                                    >
+                                        <i class="fas fa-couch"></i>
+                                        Hạng ghế:
+                                    </label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option value="1" selected>Hạng thương gia</option>
+                                        <option value="2">Hạng phổ thông</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2 mt-2">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                    Tìm chuyến bay
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-8"
-                 style="border-radius: 10px;
+                <div class="col-md-8 d-flex align-items-center"
+                     style="border-radius: 10px;
                             backdrop-filter: blur(10px);
-                            background-color: rgba(255, 255, 255, 0.3)"
-            >
-                <div class="list-group">
-                    {% for s in schedules %}
-                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">Chuyến bay {{s.departure_airport}} - {{s.destination_airport}}</h5>
+                            background-color: rgba(255, 255, 255, 0.3);
+                            height: 51vh"
+                >
+                    <div class="list-flight">
+                        <h3>Hiển thị các chuyến bay</h3>
+                        <div style="background-color: white">
+                            Hiển thi
                         </div>
-                        <p class="mb-1">Khởi hành lúc: {{s.flight_datetime}}</p>
-                        <small>Thời gian bay: {{s.flight_time}}</small>
-                        {% for c in s.seat_class %}
-                        <span> Số ghế {{c.ticket_class.name}}: {{c.seat_quantity}}</span>
+                    </div>
 
-                        {% endfor %}
-                    </a>
-                    <input class="btn btn-primary" type="submit" onclick="" value="Submit">
-                    {% endfor %}
                 </div>
             </div>
         </div>
