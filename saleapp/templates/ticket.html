@@ -74,10 +74,14 @@
                 >
                     <div class="list-flight">
                         <h3>Hiển thị các chuyến bay</h3>
+                        {% for s in schedules %}
                         <div style="background-color: white">
-                            Hiển thi
+                            {{s.id}}
+                            <a class="nav-link" href="/cart?flight_id={{s.id}}">Đặt vé</a>
                         </div>
+                        {% endfor %}
                     </div>
+
 
                 </div>
             </div>

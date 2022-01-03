@@ -1,5 +1,5 @@
 from flask import render_template, session, jsonify
-from flask_login import login_user
+from flask_login import login_user, current_user
 from saleapp import app, utils, login
 import cloudinary.uploader
 
@@ -133,7 +133,7 @@ def guest_register():
         except Exception as ex:
             error_message = 'Đã xảy ra lỗi trong quá trình đăng ký!' + str(ex)
 
-    return render_template('register.html', error_message=error_message)
+    return render_template('guest-form.html', error_message=error_message)
 
 
 @app.route('/schedule', methods=['get', 'post'])
@@ -211,6 +211,9 @@ def add_ticket_detail():
 
 @app.route('/cart')
 def cart():
+    flight_id = request.args.get('flight_id')
+    flight = utils.load_flight(flight_id=flight_id)
+    session['flight'] = flight
     return render_template('cart.html')
 
 

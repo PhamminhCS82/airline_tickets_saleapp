@@ -3,6 +3,7 @@ from models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetai
 from saleapp import db
 from flask_login import current_user
 
+
 def check_login(user_name, password, role=UserRole.USER):
     if user_name and password:
         password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
@@ -15,7 +16,6 @@ def check_login(user_name, password, role=UserRole.USER):
 def get_user_by_id(user_id):
     if user_id:
         return User.query.get(user_id)
-
 
 
 def check_existed_user(user_name):
@@ -72,3 +72,7 @@ def add_receipt(cart):
             db.session.add(d)
 
         db.session.commit()
+
+
+def load_flight(flight_id):
+    return FlightSchedule.query.filter(id=flight_id)
