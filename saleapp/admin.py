@@ -1,7 +1,7 @@
 from saleapp import app
 from flask_admin.contrib.sqla import ModelView
 from saleapp import db
-from models import User, UserRole
+from models import *
 from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask import redirect, request, url_for
 from flask_login import logout_user, current_user
@@ -41,4 +41,9 @@ admin = Admin(app=app,
 
 
 admin.add_view(AuthenticatedView(User, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(FlightSchedule, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(SeatClass, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(Ticket, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(IntermediateAirport, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(Airport, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
 admin.add_view(LogoutView(name='Signout', menu_icon_type='fa', menu_icon_value='fa-sign-out'))

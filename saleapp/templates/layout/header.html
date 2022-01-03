@@ -39,7 +39,12 @@
                 </li>
             </ul>
             <div class="d-flex" style="margin-left: auto">
-                {% if current_user.is_authenticated %}
+                {% if current_user.is_authenticated and current_user.has_roles() is true %}
+                <div>
+                    <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
+                    <a class="nav-link" href="{{ url_for('schedule') }}">Lập lịch</a>
+                </div>
+                {% elif current_user.is_authenticated %}
                 <div>
                     <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
                 </div>
