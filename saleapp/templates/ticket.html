@@ -116,8 +116,10 @@
                         <small>Thời gian bay: {{s.flight_time}}</small>
                         {% for c in s.seat_class %}
                         <span> Số ghế {{c.ticket_class.name}}: {{c.seat_quantity}}</span>
+
                         {% endfor %}
                     </a>
+                    <input class="btn btn-primary" type="submit" onclick="" value="Submit">
                     {% endfor %}
                 </div>
             </div>
