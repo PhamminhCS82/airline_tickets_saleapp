@@ -17,6 +17,11 @@ def get_user_by_id(user_id):
         return User.query.get(user_id)
 
 
+def check_existed_user(user_name):
+    if user_name:
+        return User.query.filter(User.user_name.__eq__(user_name.strip))
+
+
 def add_user(last_name, first_name, user_name, password, email, image):
     password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
     new_user = User(last_name=last_name.strip(),

@@ -4,20 +4,41 @@
 
 {% block content %}
     <div class="container-fluid">
-        <div style="height: 65vh;
-                    background-image: url('static/images/plane.jpg');
+        <div class="shadow d-flex align-items-center justify-content-center flex-column"
+             style="height: 80vh;
+                    background-image: url('static/images/vietnam.jpg');
                     background-repeat: no-repeat;
                     background-size: cover;
                     background-position: center"
         >
-
+            <h1 style="color: #f4f5fa;
+                       font-family: 'Martel', serif;
+                       font-size: 5rem"
+            >OU Airline</h1>
+            <p style="color: #f4f5fa; font-size: 20px">Open University nơi Deadline luôn bên bạn</p>
+            <button style="color: #f4f5fa;
+                           background-color: transparent;
+                           border: 2px solid #f4f5fa;
+                           padding: 1rem 3rem;
+                           font-size: 18px;
+                           border-radius: 10px"
+            >
+                Đặt vé
+            </button>
         </div>
-        <div>
-            <div>
-                Go to vietnam?
-            </div>
-            <div>
-                Chứa các card có hình việt nam
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-3" style="background-color: red">
+                    <h3>Go to Vietnam?</h3>
+                </div>
+                <div class="col-md-3" style="background-color: aqua">
+                    <div class="mx-auto" style="background-image: url('static/images/vietnam1.jpg');
+                                background-repeat: no-repeat;
+                                background-size: cover;
+                                background-position: center;
+                                width: 98%; height: 30vh">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
