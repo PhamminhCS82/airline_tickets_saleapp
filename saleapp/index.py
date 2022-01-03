@@ -52,20 +52,24 @@ def user_register():
         password = request.form.get('password')
         confirm_password = request.form.get('confirm-password')
         image_path = None
+        existed_user = utils.check_existed_user(user_name=user_name)
 
         try:
             if password.strip().__eq__(confirm_password.strip()):
-                image = request.files.get('user-image')
-                if image:
-                    response = cloudinary.uploader.upload(image)
-                    image_path = response['secure_url']
-                utils.add_user(last_name=last_name.strip(),
-                               first_name=first_name.strip(),
-                               user_name=user_name.strip(),
-                               password=password.strip(),
-                               email=email.strip(),
-                               image=image_path)
-                return redirect(url_for('user_login'))
+                if existed_user:
+                    error_message = 'Username đã tồn tại!'
+                else:
+                    image = request.files.get('user-image')
+                    if image:
+                        response = cloudinary.uploader.upload(image)
+                        image_path = response['secure_url']
+                    utils.add_user(last_name=last_name.strip(),
+                                   first_name=first_name.strip(),
+                                   user_name=user_name.strip(),
+                                   password=password.strip(),
+                                   email=email.strip(),
+                                   image=image_path)
+                    return redirect(url_for('user_login'))
             else:
                 error_message = 'Mật khẩu không trùng nhau!'
         except Exception as ex:
