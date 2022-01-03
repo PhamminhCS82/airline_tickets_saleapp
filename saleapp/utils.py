@@ -1,5 +1,5 @@
 import hashlib
-from models import User, UserRole, FlightSchedule, Airport
+from models import User, UserRole, FlightSchedule, Airport, FlightSchedule, SeatClass
 from saleapp import db
 
 
@@ -42,3 +42,7 @@ def add_schedule(id, departure, destination, flight_datetime, flight_time):
                                   flight_time=flight_time)
     db.session.add(new_schedule)
     db.session.commit()
+
+
+def get_all_schedule():
+    return FlightSchedule.query.all()

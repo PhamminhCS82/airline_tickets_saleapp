@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, session, jsonify
 from flask_login import login_user
 from saleapp import app, utils, login
 import cloudinary.uploader
@@ -21,10 +21,10 @@ def user_login():
             login_user(user)
             return redirect(url_for(request.args.get('next', 'index')))
         else:
-            admin = utils.check_login(user_name=user_name, password=password, role=UserRole.ADMIN)
+            ad = utils.check_login(user_name=user_name, password=password, role=UserRole.ADMIN)
             employee = utils.check_login(user_name=user_name, password=password, role=UserRole.EMPLOYEE)
-            if admin:
-                login_user(admin)
+            if ad:
+                login_user(ad)
                 return redirect(url_for(request.args.get('next', 'admin.index')))
             elif employee:
                 login_user(employee)
@@ -89,7 +89,8 @@ def contact_us():
 @app.route('/ticket')
 def book_ticket():
     airports = utils.read_airport()
-    return render_template('ticket.html', airports=airports)
+    schedules = utils.get_all_schedule()
+    return render_template('ticket.html', airports=airports, schedules=schedules)
 
 
 @app.route('/type-form')
@@ -134,14 +135,14 @@ def schedule():
     airports = utils.read_airport()
     error_message = ""
     if request.method.__eq__('POST'):
-        id = request.form.get('flight-id')
+        flight_id = request.form.get('flight-id')
         departure = request.form.get('departure')
         destination = request.form.get('destination')
         flight_datetime = request.form.get('flight-datetime')
         flight_time = request.form.get('flight-time')
 
         try:
-            utils.add_schedule(id, departure, destination, flight_datetime, flight_time)
+            utils.add_schedule(flight_id, departure, destination, flight_datetime, flight_time)
             return redirect(url_for('index'))
         except Exception as ex:
             error_message = 'Đã xảy ra lỗi trong quá trình đăng ký!' + str(ex)
@@ -151,7 +152,34 @@ def schedule():
 
 @app.route('/api/add-to-receipt', methods=['post'])
 def add_to_receipt():
-    pass
+    data = request.json
+    ticket_id = str(data.get('id'))
+    name = str(data.get('name'))
+    passport = str(data.get('passport'))
+    telephone = str(data.get('telephone'))
+    ticket_class = str(data.get('ticket-class'))
+    price = str(data.get('price'))
+    cart = session.get('cart')
+    if not cart:
+        cart = {}
+    else:
+        receipt = {
+            'id': ticket_id,
+            'name': name,
+            'price': price,
+            'passport': passport,
+            'telephone': telephone,
+            'ticket-class': ticket_class
+        }
+        cart.add(receipt)
+        session['cart'] = cart
+
+        return jsonify(utils.cart_stats(session.get('cart')))
+
+
+@app.route('/cart')
+def cart():
+    return render_template('cart.html')
 
 
 if __name__ == '__main__':

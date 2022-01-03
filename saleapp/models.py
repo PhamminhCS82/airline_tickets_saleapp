@@ -77,7 +77,7 @@ class Ticket(BaseModel):
     flight_id = Column(String(20), ForeignKey(FlightSchedule.id), primary_key=True)
     seat_quantity = Column(Integer, nullable=False, default=0)
     price = Column(Float, default=0)
-    receipt_details = relationship('ReceiptDetail', backref='ticket', lazy=True)
+    ticket_class = relationship(SeatClass, backref='ticket', lazy=True)
 
 
 class IntermediateAirport(db.Model):
@@ -92,14 +92,20 @@ class IntermediateAirport(db.Model):
 class Receipt(BaseModel):
     created_date = Column(DateTime, default=datetime.now())
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
-    details = relationship('ReceiptDetail', backref='receipt', lazy=True)
-
-
-class ReceiptDetail(db.Model):
-    receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False, primary_key=True)
-    ticket_id = Column(Integer, ForeignKey(Ticket.id), nullable=False, primary_key=True)
     quantity = Column(Integer, default=0)
-    unit_price = Column(Float, default=0)
+    details = relationship('TicketDetail', backref='receipt', lazy=True)
+
+
+class TicketDetail(BaseModel):
+    __tablename__ = 'ticket_detail'
+
+    receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
+    ticket_id = Column(Integer, ForeignKey(Ticket.id), nullable=False)
+    user_name = Column(String(100), nullable=False)
+    passport = Column(Integer, nullable=False)
+    telephone = Column(Integer, nullable=False)
+    ticket_class = Column(String(100), nullable=False)
+    price = Column(Float, default=0)
 
 
 if __name__ == '__main__':
