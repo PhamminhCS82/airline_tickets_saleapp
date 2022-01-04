@@ -1,6 +1,7 @@
+import stripe
 from flask import render_template, session, jsonify
 from flask_login import login_user, current_user
-from saleapp import app, utils, login
+from saleapp import app, utils, login, stripe_keys
 import cloudinary.uploader
 
 
@@ -65,19 +66,19 @@ def user_register():
                 if existed_user:
                     error_message = 'Username đã tồn tại!'
                 else:
-                  image = request.files.get('user-image')
-                  if image:
-                      response = cloudinary.uploader.upload(image)
-                      image_path = response['secure_url']
-                  utils.add_user(last_name=last_name.strip(),
-                                 first_name=first_name.strip(),
-                                 user_name=user_name.strip(),
-                                 password=password.strip(),
-                                 email=email.strip(),
-                                 telephone=telephone,
-                                 passport=passport,
-                                 image=image_path)
-                  return redirect(url_for('user_login'))
+                    image = request.files.get('user-image')
+                    if image:
+                        response = cloudinary.uploader.upload(image)
+                        image_path = response['secure_url']
+                    utils.add_user(last_name=last_name.strip(),
+                                   first_name=first_name.strip(),
+                                   user_name=user_name.strip(),
+                                   password=password.strip(),
+                                   email=email.strip(),
+                                   telephone=telephone,
+                                   passport=passport,
+                                   image=image_path)
+                    return redirect(url_for('user_login'))
 
             else:
                 error_message = 'Mật khẩu không trùng nhau!'
@@ -213,9 +214,54 @@ def add_ticket_detail():
 
 @app.route('/cart')
 def cart():
+    # session.pop('cart')
+    temp_id = session.get('temp')
+    if not temp_id:
+        temp_id = request.args.get('flight_id')
     flight_id = request.args.get('flight_id')
+    if temp_id.__eq__(flight_id) is False:
+        session['cart'] = {}
+        temp_id = request.args.get('flight_id')
     flight = utils.load_flight(flight_id=flight_id)
+    session['temp'] = temp_id
     return render_template('cart.html', flight=flight)
+
+
+@app.route('/api/pay', methods=['post'])
+def pay():
+    try:
+        utils.add_receipt(session.get('cart'))
+        del session['cart']
+    except Exception as e:
+        print(e)
+        return jsonify({'code': 404})
+
+    return jsonify({'code': 200})
+
+
+@app.route('/checkout')
+def checkout():
+    return render_template('checkout.html', key=stripe_keys['publishable_key'])
+
+
+@app.route('/charge', methods=['POST'])
+def charge():
+    # Amount in cents
+    amount = 1000
+
+    customer = stripe.Customer.create(
+        email='customer@example.com',
+        source=request.form['stripeToken']
+    )
+
+    charge = stripe.Charge.create(
+        customer=customer.id,
+        amount=amount,
+        currency='usd',
+        description='Flask Charge'
+    )
+
+    return render_template('charge.html', amount=amount)
 
 
 if __name__ == '__main__':

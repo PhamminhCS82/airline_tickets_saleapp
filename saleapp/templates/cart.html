@@ -36,7 +36,9 @@
 <hr>
 <h1 class="text-center text-info">Đơn mua vé</h1>
 <h3>Chuyến bay: {{flight.id}}</h3>
+{% if 'cart' in session and session['cart'] %}
 <table class="table" id="table">
+
     <tr>
         <th>Hành khách</th>
         <th>CMND/CCCD</th>
@@ -44,6 +46,16 @@
         <th>Hạng vé</th>
         <th>Giá tiền</th>
     </tr>
+
+    {% for c in session['cart'].values() %}
+    <tr>
+        <td>{{c.name}}</td>
+        <td>{{c.passport}}</td>
+        <td>{{c.telephone}}</td>
+        <td>{{c.ticket_class}}</td>
+        <td>{{c.price}}</td>
+    </tr>
+    {% endfor %}
 
 </table>
 
@@ -53,5 +65,5 @@
 </div>
 
 <input type="button" value="Thanh toan" onclick="pay()" class="btn btn-danger"/>
-
+{% endif %}
 {% endblock %}

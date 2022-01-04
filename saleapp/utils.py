@@ -56,17 +56,16 @@ def get_all_schedule():
 
 def add_receipt(cart):
     if cart:
-        receipt = Receipt(user=current_user)
-        ticket = db.session.get('ticket')
+        receipt = Receipt(user=current_user, quantity=len(cart))
         db.session.add(receipt)
 
         for c in cart.values():
             d = TicketDetail(receipt=receipt,
-                             ticket=ticket,
+                             ticket_id=c['ticket_id'],
                              user_name=c['name'],
                              passport=c['passport'],
                              telephone=c['telephone'],
-                             ticket_class=c['ticket-class'],
+                             ticket_class=c['ticket_class'],
                              price=c['price']
                              )
             db.session.add(d)

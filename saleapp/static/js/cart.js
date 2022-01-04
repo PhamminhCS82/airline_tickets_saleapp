@@ -18,14 +18,21 @@ function addTicket(ticketId ,name, passport, telephone, ticketClass, price) {
     }).then(function(res) {
         return res.json()
     }).then(function(data) {
-        let tableRow = document.getElementById('table')
-        console.log(data)
-        tableRow.innerHTML = tableRow.innerHTML + `<tr>
-        <td>${data.name}</td>
-        <td>${data.passport}</td>
-        <td>${data.telephone}</td>
-        <td>${data.ticket_class}</td>
-        <td>${data.price}</td>
-    </tr>`
+        location.reload()
     })
+}
+
+function pay() {
+    if (confirm('Ban chac chan thanh toan khong?') == true) {
+        fetch('/api/pay', {
+            method: 'post'
+        }).then(function(res) {
+            return res.json()
+        }).then(function(data) {
+            if (data.code === 200)
+                location.reload()
+            else
+                console.log(data)
+        })
+    }
 }
