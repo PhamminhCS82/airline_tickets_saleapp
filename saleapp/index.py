@@ -220,43 +220,60 @@ def pay():
     return jsonify({'code': 200})
 
 
+# @app.route('/checkout')
+# def checkout():
+#     try:
+#         checkout_session = stripe.checkout.Session.create(
+#             line_items=[
+#                 {
+#                     'amount': 99,
+#                     'currency': 'usd',
+#                     'quantity': 1,
+#                 },
+#             ],
+#             mode='payment',
+#             success_url='http://127.0.0.1:5000/success.html',
+#             cancel_url='http://127.0.0.1:5000/cancel.html',
+#         )
+#     except Exception as e:
+#         return str(e)
+#     return redirect(checkout_session.url, code=303)
+
+
+@app.route('/stripe_pay', methods=['post'])
+def create_checkout_session():
+    data = request.json
+    amount = str(data.get('amount'))
+    name = str(data.get('name'))
+    session_checkout = stripe.checkout.Session.create(
+        line_items=[{
+            'price_data': {
+                'currency': 'vnd',
+                'product_data': {
+                    'name': name,
+                },
+                'unit_amount': amount,
+            },
+            'quantity': 2,
+        }],
+        mode='payment',
+        success_url=url_for('thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url=url_for('checkout', _external=True),
+    )
+    return {
+        'checkout_session_id': session_checkout['id'],
+        'checkout_public_key': app.config['STRIPE_PUBLIC_KEY']
+    }
+
+
+@app.route('/thanks')
+def thanks():
+    return render_template('thanks.html')
+
+
 @app.route('/checkout')
 def checkout():
-    try:
-        checkout_session = stripe.checkout.Session.create(
-            line_items=[
-                {
-                    'price': '{{PRICE_ID}}',
-                    'quantity': 1,
-                },
-            ],
-            mode='payment',
-            success_url='http://127.0.0.1:5000/success.html',
-            cancel_url='http://127.0.0.1:5000/cancel.html',
-        )
-    except Exception as e:
-        return str(e)
-    return redirect(checkout_session.url, code=303)
-
-
-@app.route('/charge', methods=['POST'])
-def charge():
-    # Amount in cents
-    amount = 1000
-
-    customer = stripe.Customer.create(
-        email='customer@example.com',
-        source=request.form['stripeToken']
-    )
-
-    charge = stripe.Charge.create(
-        customer=customer.id,
-        amount=amount,
-        currency='usd',
-        description='Flask Charge'
-    )
-
-    return render_template('charge.html', amount=amount)
+    return render_template('checkout.html')
 
 
 @app.context_processor
