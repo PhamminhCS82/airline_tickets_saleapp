@@ -43,9 +43,11 @@ def add_guest(last_name, first_name, email, telephone, passport, image):
                     email=email.strip(),
                     phone_number=telephone,
                     passport=passport,
+                    user_role=UserRole.GUEST,
                     image=image)
     db.session.add(new_user)
     db.session.commit()
+    return new_user
 
 
 def read_airport():
@@ -65,9 +67,9 @@ def get_all_schedule():
     return FlightSchedule.query.all()
 
 
-def add_receipt(cart):
+def add_receipt(cart, user):
     if cart:
-        receipt = Receipt(user=current_user, quantity=len(cart))
+        receipt = Receipt(user=user, quantity=len(cart))
         db.session.add(receipt)
 
         for c in cart.values():
@@ -96,7 +98,6 @@ def cart_stats(cart):
         'total_quantity': total_quantity,
         'total_amount': total_amount
     }
-
 
 
 def load_flight(flight_id):

@@ -1,7 +1,7 @@
 import stripe
 from flask import render_template, session, jsonify
 from flask_login import login_user, current_user, login_required
-from saleapp import app, utils, login, stripe_keys
+from saleapp import app, utils, login
 import cloudinary.uploader
 
 
@@ -42,6 +42,9 @@ def load_user(user_id):
 @app.route('/logout')
 def user_logout():
     logout_user()
+    cart = session.get('cart')
+    if cart:
+        del session['cart']
     return redirect(url_for('index'))
 
 
@@ -106,31 +109,20 @@ def guest_register():
     if request.method.__eq__('POST'):
         last_name = request.form.get('last-name')
         first_name = request.form.get('first-name')
-        user_name = request.form.get('user-name')
         email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm-password')
-        telephone = request.get('telephone')
-        passport = request.get('passport')
+        telephone = request.form.get('telephone')
+        passport = request.form.get('passport')
         image_path = None
 
         try:
-            if password.strip().__eq__(confirm_password.strip()):
-                image = request.files.get('user-image')
-                if image:
-                    response = cloudinary.uploader.upload(image)
-                    image_path = response['secure_url']
-                utils.add_user(last_name=last_name.strip(),
-                               first_name=first_name.strip(),
-                               user_name=user_name.strip(),
-                               password=password.strip(),
-                               email=email.strip(),
-                               telephone=telephone,
-                               passport=passport,
-                               image=image_path)
-                return redirect(url_for('user_login'))
-            else:
-                error_message = 'Mật khẩu không trùng nhau!'
+            session['guest_user'] = {
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'telephone': telephone,
+                'passport': passport
+            }
+            return redirect(url_for('cart'))
         except Exception as ex:
             error_message = 'Đã xảy ra lỗi trong quá trình đăng ký!' + str(ex)
 
@@ -187,24 +179,39 @@ def add_ticket_detail():
 
 @app.route('/cart')
 def cart():
-    # session.pop('cart')
-    temp_id = session.get('temp')
-    if not temp_id:
-        temp_id = request.args.get('flight_id')
-    flight_id = request.args.get('flight_id')
-    if temp_id.__eq__(flight_id) is False:
-        session['cart'] = {}
-        temp_id = request.args.get('flight_id')
-    flight = utils.load_flight(flight_id=flight_id)
-    session['temp'] = temp_id
-    session['cart_stats'] = utils.cart_stats(session['cart'])
-    return render_template('cart.html', flight=flight, cart_stats=session['cart_stats'])
+    guest_user = session.get('guest_user')
+    if guest_user is not None or current_user.is_authenticated:
+
+        temp_id = session.get('temp')
+        if not temp_id:
+            temp_id = request.args.get('flight_id')
+        flight_id = request.args.get('flight_id')
+        if temp_id.__eq__(flight_id) is False:
+            session['cart'] = {}
+            temp_id = request.args.get('flight_id')
+        flight = utils.load_flight(flight_id=flight_id)
+        session['temp'] = temp_id
+        return render_template('cart.html', flight=flight, cart_stats=utils.cart_stats(session.get('cart')))
+    else:
+        return render_template('guest-form.html')
 
 
 @app.route('/api/pay', methods=['post'])
 def pay():
     try:
-        utils.add_receipt(session.get('cart'))
+        guest_user = session.get('guest_user')
+        if current_user.is_authenticated:
+            utils.add_receipt(session.get('cart'), user=current_user)
+        elif guest_user is not None:
+            guest_user = utils.add_guest(last_name=guest_user['last_name'],
+                                         first_name=guest_user['first_name'],
+                                         email=guest_user['email'],
+                                         telephone=guest_user['telephone'],
+                                         passport=guest_user['passport'],
+                                         image=None)
+            utils.add_receipt(session.get('cart'), user=guest_user)
+        else:
+            return jsonify({'code': 400})
         del session['cart']
     except Exception as e:
         print(e)
@@ -215,7 +222,21 @@ def pay():
 
 @app.route('/checkout')
 def checkout():
-    return render_template('checkout.html', key=stripe_keys['publishable_key'])
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    'price': '{{PRICE_ID}}',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url='http://127.0.0.1:5000/success.html',
+            cancel_url='http://127.0.0.1:5000/cancel.html',
+        )
+    except Exception as e:
+        return str(e)
+    return redirect(checkout_session.url, code=303)
 
 
 @app.route('/charge', methods=['POST'])
@@ -236,6 +257,13 @@ def charge():
     )
 
     return render_template('charge.html', amount=amount)
+
+
+@app.context_processor
+def common_response():
+    return {
+        'cart_stats': utils.cart_stats(session.get('cart'))
+    }
 
 
 if __name__ == '__main__':

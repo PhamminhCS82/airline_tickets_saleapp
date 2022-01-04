@@ -24,7 +24,7 @@
                 </p>
                 <form class="forms-sample"
                       method="post"
-                      action="{{ url_for('user_register') }}"
+                      action="{{ url_for('guest_register') }}"
                       enctype="multipart/form-data"
                 >
                     <div class="form-group">
@@ -69,7 +69,7 @@
                                placeholder="Nhập số điện thoại của bạn"
                                required
                                style="background-color: #f4f5fa"
-                               pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+
                         >
                     </div>
                     <div class="form-group">
@@ -81,7 +81,7 @@
                                placeholder="Nhập CMND/Hộ chiếu của bạn"
                                required
                                style="background-color: #f4f5fa"
-                               pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+
                         >
                     </div>
                     <button type="submit" class="btn btn-primary mr-2">Tiếp tục</button>
