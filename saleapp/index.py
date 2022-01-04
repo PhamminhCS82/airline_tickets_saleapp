@@ -94,30 +94,30 @@ def contact_us():
     return render_template('contact.html')
 
 
-@app.route('/ticket')
+@app.route('/ticket', methods=['get', 'post'])
 def book_ticket():
     airports = utils.read_airport()
     error_message = ''
-    shedules = utils.get_all_schedule()
-    # if request.method.__eq__('POST'):
-    #     departure = request.form.get('departure')
-    #     destination = request.form.get('destination')
-    #     datetime = request.form.get('datetime')
-    #     print(utils.find_flight(departure_airport=departure,
-    #                             destination_airport=destination))
 
-        # try:
-        #     if departure.__eq__(destination):
-        #         error_message = "Không thể chọn điểm khởi hành trùng với điểm đến"
-        #     else:
-        #         shedules = utils.find_flight(departure_airport=departure,
-        #                                      destination_airport=destination)
-        #
-        #         return render_template('ticket.html', airports=airports, error_message=error_message, shedules=shedules)
-        #
-        # except Exception as ex:
-        #     error_message = 'Đã xảy ra lỗi trong quá trình tìm chuyến bay: ' + str(ex)
-    return render_template('ticket.html', airports=airports, error_message=error_message, shedules=shedules)
+    try:
+        if request.method.__eq__('POST'):
+            departure = request.form.get('departure')
+            destination = request.form.get('destination')
+            datetime = request.form.get('datetime')
+            if departure.strip().__eq__(destination.strip()):
+                error_message = 'Điểm khởi hành không thể trùng với điểm đến'
+            else:
+                schedules = utils.search_flight(departure_airport=departure.strip(),
+                                                destination_airport=destination.strip(),
+                                                flight_datetime=datetime)
+                if schedules:
+                    return render_template('ticket.html', airports=airports, schedules=schedules)
+                error_message = 'Hiện tại chưa có chuyến bay này!'
+
+    except Exception as ex:
+        error_message = 'Hệ thống đã xảy ra lỗi: ' + str(ex)
+
+    return render_template('ticket.html', airports=airports, error_message=error_message )
 
 
 @app.route('/type-form')

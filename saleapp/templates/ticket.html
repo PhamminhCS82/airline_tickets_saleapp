@@ -89,13 +89,30 @@
                             height: 51vh"
                 >
                     <div class="list-flight">
-                        <h3>Hiển thị các chuyến bay</h3>
-                        {% for s in schedules %}
-                            <div style="background-color: white">
-                                {{s.id}}
-                                <a class="nav-link" href="/cart?flight_id={{s.id}}">Đặt vé</a>
-                            </div>
-                        {% endfor %}
+                        {% if schedules %}
+                            {% for s in schedules %}
+                                <div class="d-flex align-items-center justify-content-around"
+                                     style="background-color: transparent;
+                                     border-bottom: 2px solid white"
+                                >
+                                    <div style="width: 210px; height: 65px">
+                                        <p class="font-weight-bold text-center">Điểm khởi hành</p>
+                                        <p class="text-center">{{ s.departure_airport }}</p>
+                                    </div>
+                                    <div style="width: 210px; height: 65px">
+                                        <p class="font-weight-bold text-center">Điểm đến</p>
+                                        <p class="text-center">{{ s.destination_airport }}</p>
+                                    </div>
+                                    <div style="width: 180px; height: 65px">
+                                        <p class="font-weight-bold text-center">Ngày đi</p>
+                                        <p class="text-center">{{ s.flight_datetime }}</p>
+                                    </div>
+                                    <div>
+                                        <a style="margin-left: -6px" class="nav-link btn-primary" href="/cart?flight_id={{s.id}}">Đặt vé</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
 
                 </div>

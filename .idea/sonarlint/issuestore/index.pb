@@ -27,23 +27,23 @@ L
 saleapp/templates/index.html,0\d\0d837b7e10c77f8b88d677c3aebb836abf717550
 T
 $saleapp/templates/layout/header.html,3\5\3570038c83fb0a78a2a4ccb83490aeed3716a3c1
-O
-saleapp/templates/schedule.html,4\a\4add64b03a653bfe1ad0675b7221525369186b60
+J
+saleapp/templates/404.html,a\f\af976829937df5aa32c68064cc9c29733bf314de
 C
 saleapp/__init__.py,1\3\134a72da98e83be1bd757bd653ca5b3a0baaa66f
 M
 saleapp/static/css/ticket.css,e\2\e28a4437b9e0767f9836d342c617b1130fc64f5d
-L
-saleapp/templates/login.html,d\9\d9023252178d69863cf55e4bfacbf051cc470acf
-@
-saleapp/utils.py,a\b\abea3b334ba5979e114f82576314e2a7036243c7
+O
+saleapp/templates/schedule.html,4\a\4add64b03a653bfe1ad0675b7221525369186b60
 A
 saleapp/models.py,5\8\5868c60e84c8b7a8aa421ace45b70c43d2003c80
+L
+saleapp/templates/login.html,d\9\d9023252178d69863cf55e4bfacbf051cc470acf
 M
 saleapp/templates/ticket.html,c\f\cff0abd2b129c370da79ed2a654068bb5781cb38
 @
-saleapp/index.py,2\0\20eaacb2f8929181aaa103941f07f1d78150b3df
-J
-saleapp/templates/404.html,a\f\af976829937df5aa32c68064cc9c29733bf314de
+saleapp/utils.py,a\b\abea3b334ba5979e114f82576314e2a7036243c7
 R
 "saleapp/templates/layout/base.html,c\c\cc4be2b82cc8ceed7bc65b2a8ffa031fb06b93e1
+@
+saleapp/index.py,2\0\20eaacb2f8929181aaa103941f07f1d78150b3df

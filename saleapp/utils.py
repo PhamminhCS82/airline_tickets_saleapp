@@ -3,6 +3,7 @@ from models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetai
 from saleapp import db
 from flask_login import current_user
 
+
 def check_login(user_name, password, role=UserRole.USER):
     if user_name and password:
         password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
@@ -53,6 +54,13 @@ def get_all_schedule():
     return FlightSchedule.query.all()
 
 
+def search_flight(departure_airport, destination_airport, flight_datetime):
+    return FlightSchedule.query.filter(FlightSchedule.departure_airport.__eq__(departure_airport),
+                                       FlightSchedule.destination_airport.__eq__(destination_airport),
+                                       FlightSchedule.flight_time.__eq__(flight_datetime))
+
+
+
 def add_receipt(cart):
     if cart:
         receipt = Receipt(user=current_user)
@@ -71,12 +79,3 @@ def add_receipt(cart):
             db.session.add(d)
 
         db.session.commit()
-
-
-def find_flight(departure_airport, destination_airport):
-    # return FlightSchedule.query.filter(FlightSchedule.departure_airport.__eq__(departure_airport),
-    #                                    FlightSchedule.destination_airport.__eq__(destination_airport),
-    #                                    FlightSchedule.flight_datetime.__eq__(flight_datetime))
-
-    return FlightSchedule.query.filter(FlightSchedule.departure_airport.__eq__(departure_airport),
-                                       FlightSchedule.destination_airport.__eq__(destination_airport))
