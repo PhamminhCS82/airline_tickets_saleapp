@@ -37,6 +37,17 @@ def add_user(last_name, first_name, user_name, password, email, telephone, passp
     db.session.commit()
 
 
+def add_guest(last_name, first_name, email, telephone, passport, image):
+    new_user = User(last_name=last_name.strip(),
+                    first_name=first_name.strip(),
+                    email=email.strip(),
+                    phone_number=telephone,
+                    passport=passport,
+                    image=image)
+    db.session.add(new_user)
+    db.session.commit()
+
+
 def read_airport():
     return Airport.query.all()
 
@@ -71,6 +82,21 @@ def add_receipt(cart):
             db.session.add(d)
 
         db.session.commit()
+
+
+def cart_stats(cart):
+    total_quantity, total_amount = 0, 0
+
+    if cart:
+        total_quantity = len(cart)
+        for c in cart.values():
+            total_amount += float(c['price'])
+
+    return {
+        'total_quantity': total_quantity,
+        'total_amount': total_amount
+    }
+
 
 
 def load_flight(flight_id):

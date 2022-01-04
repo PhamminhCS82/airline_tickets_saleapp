@@ -7,32 +7,36 @@
 {% endblock %}
 {% block content %}
 <h1 class="text-center text-info">Thêm vé</h1>
-<div class="form-group">
-    <label for="name">Họ và tên</label>
-    <input type="text" class="form-control" placeholder="Nhập họ và tên" id="name">
-</div>
-<div class="form-group">
-    <label for="passport">Passport</label>
-    <input type="tel" class="form-control" placeholder="CMND/Hộ Chiếu" id="passport">
-</div>
-<div class="form-group">
-    <label for="telephone">Điện thoại</label>
-    <input type="tel" class="form-control" placeholder="Số điện thoại" id="telephone">
-</div>
-<label for="ticketClass">Hạng vé</label>
-<select class="form-control" id="ticketClass">
-    {% for c in flight.seat_class %}
-    <option value="{{c.price}}" id="{{c.id}}">{{c.ticket_class}}</option>
-    {% endfor %}
-</select>
-<input type="button" value="Thêm vé"
-       onclick="addTicket(
+<form>
+    <div class="form-group">
+        <label for="name">Họ và tên</label>
+        <input type="text" class="form-control" required pattern="[A-Za-z]{3}" placeholder="Nhập họ và tên" id="name">
+    </div>
+    <div class="form-group">
+        <label for="passport">Passport</label>
+        <input type="tel" class="form-control" required pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" maxlength="9"
+               placeholder="CMND/Hộ Chiếu" id="passport">
+    </div>
+    <div class="form-group">
+        <label for="telephone">Điện thoại</label>
+        <input type="tel" class="form-control" required pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" maxlength="9"
+               placeholder="Số điện thoại" id="telephone">
+    </div>
+    <label for="ticketClass">Hạng vé</label>
+    <select class="form-control" id="ticketClass">
+        {% for c in flight.seat_class %}
+        <option value="{{c.price}}" id="{{c.id}}">{{c.ticket_class}}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Thêm vé"
+           onclick="addTicket(
        document.getElementById('ticketClass').options[document.getElementById('ticketClass').options.selectedIndex].id,
        document.getElementById('name').value,document.getElementById('passport').value,
        document.getElementById('telephone').value,
        document.getElementById('ticketClass').options[document.getElementById('ticketClass').options.selectedIndex].text,
        document.getElementById('ticketClass').value)"
-       class="btn btn-danger"/>
+           class="btn btn-danger"/>
+</form>
 <hr>
 <h1 class="text-center text-info">Đơn mua vé</h1>
 <h3>Chuyến bay: {{flight.id}}</h3>
@@ -60,8 +64,8 @@
 </table>
 
 <div class="alert alert-info">
-    <h5>Tong san pham: <span id="cartCounter2"></span></h5>
-    <h5>Tong tien: <span id="cartAmount"></span> VND</h5>
+    <h5>Tong san pham: <span id="cartCounter2">{{ cart_stats.total_quantity }}</span></h5>
+    <h5>Tong tien: <span id="cartAmount">{{ "{:,.1f}".format(cart_stats.total_amount) }}</span> VND</h5>
 </div>
 
 <input type="button" value="Thanh toan" onclick="pay()" class="btn btn-danger"/>

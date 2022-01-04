@@ -1,6 +1,6 @@
 import stripe
 from flask import render_template, session, jsonify
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, login_required
 from saleapp import app, utils, login, stripe_keys
 import cloudinary.uploader
 
@@ -100,7 +100,7 @@ def book_ticket():
     return render_template('ticket.html', airports=airports, schedules=schedules)
 
 
-@app.route('/type-form')
+@app.route('/type-form', methods=['get', 'post'])
 def guest_register():
     error_message = ""
     if request.method.__eq__('POST'):
@@ -138,6 +138,7 @@ def guest_register():
 
 
 @app.route('/schedule', methods=['get', 'post'])
+@login_required
 def schedule():
     airports = utils.read_airport()
     error_message = ""
@@ -157,33 +158,6 @@ def schedule():
     return render_template('schedule.html', airports=airports, error_message=error_message)
 
 
-@app.route('/api/add-to-receipt', methods=['post'])
-def add_to_receipt():
-    data = request.json
-    ticket_id = str(data.get('id'))
-    name = str(data.get('name'))
-    passport = str(data.get('passport'))
-    telephone = str(data.get('telephone'))
-    ticket_class = str(data.get('ticket-class'))
-    price = str(data.get('price'))
-    cart = session.get('cart')
-    if not cart:
-        cart = {}
-    else:
-        receipt = {
-            'id': ticket_id,
-            'name': name,
-            'price': price,
-            'passport': passport,
-            'telephone': telephone,
-            'ticket-class': ticket_class
-        }
-        cart.add(receipt)
-        session['cart'] = cart
-
-        return jsonify(session.get('cart'))
-
-
 @app.route('/api/add-ticket', methods=['post'])
 def add_ticket_detail():
     data = request.json
@@ -197,7 +171,7 @@ def add_ticket_detail():
     if not cart:
         cart = {}
     if passport in cart:
-        return jsonify(session.get('cart'))
+        return jsonify({'code': 400})
     else:
         cart[passport] = {
             'ticket_id': ticket_id,
@@ -208,7 +182,6 @@ def add_ticket_detail():
             'ticket_class': ticket_class
         }
         session['cart'] = cart
-
         return jsonify(cart[passport])
 
 
@@ -224,7 +197,8 @@ def cart():
         temp_id = request.args.get('flight_id')
     flight = utils.load_flight(flight_id=flight_id)
     session['temp'] = temp_id
-    return render_template('cart.html', flight=flight)
+    session['cart_stats'] = utils.cart_stats(session['cart'])
+    return render_template('cart.html', flight=flight, cart_stats=session['cart_stats'])
 
 
 @app.route('/api/pay', methods=['post'])

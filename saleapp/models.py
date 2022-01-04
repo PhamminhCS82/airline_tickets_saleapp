@@ -67,7 +67,7 @@ class SeatClass(BaseModel):
 
     name = Column(String(100), nullable=False)
     price = Column(Float, nullable=False)
-    seat_class = relationship('Ticket', backref='seat_class', lazy=True)
+    seat_class = relationship('Ticket', back_populates='ticket_class', lazy=True)
 
     def __str__(self):
         return self.name
@@ -80,7 +80,7 @@ class Ticket(BaseModel):
     flight_id = Column(String(20), ForeignKey(FlightSchedule.id), primary_key=True)
     seat_quantity = Column(Integer, nullable=False, default=0)
     price = Column(Float, default=0)
-    ticket_class = relationship(SeatClass, backref='ticket', lazy=True)
+    ticket_class = relationship(SeatClass, back_populates='seat_class', lazy=True)
     ticket_details = relationship('TicketDetail', backref='ticket', lazy=True)
 
 

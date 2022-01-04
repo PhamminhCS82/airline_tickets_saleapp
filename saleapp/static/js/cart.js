@@ -18,7 +18,10 @@ function addTicket(ticketId ,name, passport, telephone, ticketClass, price) {
     }).then(function(res) {
         return res.json()
     }).then(function(data) {
-        location.reload()
+        if(data.code !== null && data.code === 400)
+            window.alert('Trùng CMND/Hộ Chiếu')
+        else
+            location.reload()
     })
 }
 
