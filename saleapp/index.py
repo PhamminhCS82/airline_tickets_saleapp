@@ -69,6 +69,8 @@ def user_register():
                   if image:
                       response = cloudinary.uploader.upload(image)
                       image_path = response['secure_url']
+                  else:
+                      image_path = 'https://res.cloudinary.com/dnwauajh9/image/upload/v1641046577/xlq16tk1iswnjeqfv4z4.jpg'
                   utils.add_user(last_name=last_name.strip(),
                                  first_name=first_name.strip(),
                                  user_name=user_name.strip(),
@@ -95,8 +97,27 @@ def contact_us():
 @app.route('/ticket')
 def book_ticket():
     airports = utils.read_airport()
-    schedules = utils.get_all_schedule()
-    return render_template('ticket.html', airports=airports, schedules=schedules)
+    error_message = ''
+    shedules = utils.get_all_schedule()
+    # if request.method.__eq__('POST'):
+    #     departure = request.form.get('departure')
+    #     destination = request.form.get('destination')
+    #     datetime = request.form.get('datetime')
+    #     print(utils.find_flight(departure_airport=departure,
+    #                             destination_airport=destination))
+
+        # try:
+        #     if departure.__eq__(destination):
+        #         error_message = "Không thể chọn điểm khởi hành trùng với điểm đến"
+        #     else:
+        #         shedules = utils.find_flight(departure_airport=departure,
+        #                                      destination_airport=destination)
+        #
+        #         return render_template('ticket.html', airports=airports, error_message=error_message, shedules=shedules)
+        #
+        # except Exception as ex:
+        #     error_message = 'Đã xảy ra lỗi trong quá trình tìm chuyến bay: ' + str(ex)
+    return render_template('ticket.html', airports=airports, error_message=error_message, shedules=shedules)
 
 
 @app.route('/type-form')

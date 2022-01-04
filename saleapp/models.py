@@ -109,8 +109,8 @@ class TicketDetail(BaseModel):
     price = Column(Float, default=0)
 
 
-if __name__ == '__main__':
-    db.create_all()
+# if __name__ == '__main__':
+    # db.create_all()
 
     # password = str(hashlib.md5("abcd1234".encode('utf-8')).hexdigest())
     # admin1 = User(last_name="Pham Quang", first_name="Minh", user_name="admin",
@@ -125,6 +125,6 @@ if __name__ == '__main__':
     # for i in range(10):
     #     airport = Airport(id='AIR' + str(i), name='Airport' + str(i), address='Location' + str(i))
     #     db.session.add(airport)
-    # db.session.add(admin1)
+    # db.session.add(admin2)
     # db.session.commit()
     # db.metadata.clear()

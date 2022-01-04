@@ -17,7 +17,6 @@ def get_user_by_id(user_id):
         return User.query.get(user_id)
 
 
-
 def check_existed_user(user_name):
     if user_name:
         return User.query.filter(User.user_name.__eq__(user_name.strip))
@@ -72,3 +71,12 @@ def add_receipt(cart):
             db.session.add(d)
 
         db.session.commit()
+
+
+def find_flight(departure_airport, destination_airport):
+    # return FlightSchedule.query.filter(FlightSchedule.departure_airport.__eq__(departure_airport),
+    #                                    FlightSchedule.destination_airport.__eq__(destination_airport),
+    #                                    FlightSchedule.flight_datetime.__eq__(flight_datetime))
+
+    return FlightSchedule.query.filter(FlightSchedule.departure_airport.__eq__(departure_airport),
+                                       FlightSchedule.destination_airport.__eq__(destination_airport))
