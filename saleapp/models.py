@@ -20,6 +20,8 @@ class UserRole(UserEnum):
 
 
 class User(BaseModel, UserMixin):
+    __table_args__ = {'extend_existing': True}
+
     last_name = Column(String(50), nullable=False)
     first_name = Column(String(100), nullable=False)
     user_name = Column(String(100), nullable=True, unique=True)

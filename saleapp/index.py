@@ -1,9 +1,9 @@
 import stripe
 from flask import render_template, session, jsonify
-from flask_login import login_user, current_user, login_required
-from saleapp import app, utils, login
+from flask_login import login_user, login_required
+from saleapp import login
 import cloudinary.uploader
-
+from saleapp.admin import *
 
 @app.route("/")
 def index():
@@ -273,6 +273,5 @@ def common_response():
 
 
 if __name__ == '__main__':
-    from admin import *
 
     app.run(debug=True)

@@ -1,7 +1,9 @@
 import hashlib
-from models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetail
+
+from sqlalchemy import func, extract, or_
+
+from saleapp.models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetail, Ticket
 from saleapp import db
-from flask_login import current_user
 
 
 def check_login(user_name, password, role=UserRole.USER):
@@ -102,3 +104,39 @@ def cart_stats(cart):
 
 def load_flight(flight_id):
     return FlightSchedule.query.filter(FlightSchedule.id.__eq__(flight_id)).first()
+
+
+def flight_stats(kw=None, from_date=None, to_date=None):
+    f = db.session.query(func.concat(FlightSchedule.departure_airport, ' - ', FlightSchedule.destination_airport),
+                         func.sum(TicketDetail.price)) \
+        .join(Ticket, Ticket.flight_id.__eq__(FlightSchedule.id))\
+        .join(TicketDetail, TicketDetail.ticket_id.__eq__(Ticket.id))\
+        .group_by(FlightSchedule.departure_airport, FlightSchedule.destination_airport)
+
+    if kw:
+        f = f.filter(or_(FlightSchedule.departure_airport.contains(kw), FlightSchedule.destination_airport.contains(kw)))
+
+    if from_date:
+        f = f.filter(FlightSchedule.flight_datetime.__ge__(from_date))
+
+    if to_date:
+        f = f.filter(FlightSchedule.flight_datetime.__le__(to_date))
+
+    return f.all()
+
+
+def flight_count():
+    f = db.session.query(func.concat(FlightSchedule.departure_airport, ' - ', FlightSchedule.destination_airport),
+                         func.count(FlightSchedule.id))\
+        .group_by(FlightSchedule.departure_airport, FlightSchedule.destination_airport)
+    return f.all()
+
+
+def flight_month_stats(year):
+    return db.session.query(extract('month', FlightSchedule.flight_datetime),
+                            func.sum(TicketDetail.price)) \
+            .join(Ticket, Ticket.flight_id.__eq__(FlightSchedule.id)) \
+            .join(TicketDetail, TicketDetail.ticket_id.__eq__(Ticket.id))\
+            .filter(extract('year', FlightSchedule.flight_datetime) == year)\
+            .group_by(extract('month', FlightSchedule.flight_datetime))\
+            .order_by(extract('month', FlightSchedule.flight_datetime)).all()
