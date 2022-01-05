@@ -76,20 +76,17 @@ def get_all_schedule():
     return FlightSchedule.query.all()
 
 
-
 def search_flight(departure_airport, destination_airport, flight_datetime, seat_class):
     schedules = FlightSchedule.query.filter(FlightSchedule.departure_airport.__eq__(departure_airport),
                                             FlightSchedule.destination_airport.__eq__(destination_airport),
                                             FlightSchedule.flight_datetime.cast(Date).__eq__(flight_datetime)).all()
 
-    seat_quantity = db.session.query(func.count(TicketDetail.ticket_id))\
-        .join(Ticket.Ticket.id.__eq__(TicketDetail.ticket_id))\
-        .join(FlightSchedule.id.__eq__(Ticket.flight_id)).filter()
+    # seat_quantity = db.session.query(func.count(TicketDetail.ticket_id))\
+    #     .join(Ticket.Ticket.id.__eq__(TicketDetail.ticket_id))\
+    #     .join(FlightSchedule.id.__eq__(Ticket.flight_id)).filter()
 
-    print(seat_quantity)
-    return seat_quantity, schedules
-
-
+    # print(seat_quantity)
+    return schedules
 
 
 def add_receipt(cart, user):
