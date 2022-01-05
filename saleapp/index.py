@@ -220,55 +220,44 @@ def pay():
     return jsonify({'code': 200})
 
 
-# @app.route('/checkout')
-# def checkout():
-#     try:
-#         checkout_session = stripe.checkout.Session.create(
-#             line_items=[
-#                 {
-#                     'amount': 99,
-#                     'currency': 'usd',
-#                     'quantity': 1,
-#                 },
-#             ],
-#             mode='payment',
-#             success_url='http://127.0.0.1:5000/success.html',
-#             cancel_url='http://127.0.0.1:5000/cancel.html',
-#         )
-#     except Exception as e:
-#         return str(e)
-#     return redirect(checkout_session.url, code=303)
-
-
+# Thanh toan online su dung stripe
 @app.route('/stripe_pay', methods=['post'])
 def create_checkout_session():
-    data = request.json
-    amount = str(data.get('amount'))
-    name = str(data.get('name'))
-    session_checkout = stripe.checkout.Session.create(
-        line_items=[{
-            'price_data': {
-                'currency': 'vnd',
-                'product_data': {
-                    'name': name,
+    try:
+        cart_checkout = utils.cart_stats(session.get('cart'))
+        print(cart_checkout)
+        session_checkout = stripe.checkout.Session.create(
+            line_items=[{
+                'price_data': {
+                    'currency': 'vnd',
+                    'product_data': {
+                        'name': 'Ve may bay',
+                    },
+                    'unit_amount': int(cart_checkout['total_amount']),
                 },
-                'unit_amount': amount,
-            },
-            'quantity': 2,
-        }],
-        mode='payment',
-        success_url=url_for('thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url=url_for('checkout', _external=True),
-    )
-    return {
-        'checkout_session_id': session_checkout['id'],
-        'checkout_public_key': app.config['STRIPE_PUBLIC_KEY']
-    }
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url=url_for('thanks', _external=True) + '?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url=url_for('cart', _external=True),
+        )
+        return {
+            'checkout_session_id': session_checkout['id'],
+            'checkout_public_key': app.config['STRIPE_PUBLIC_KEY']
+        }
+    except Exception as e:
+        print(e)
+        return jsonify({'code': 400})
 
 
 @app.route('/thanks')
 def thanks():
-    return render_template('thanks.html')
+    # utils.add_receipt(session.get('cart'), user=current_user)
+    cart_checkout = session.get('cart')
+    cart_stats = utils.cart_stats(session.get('cart'))
+    del session['cart']
+    print(cart_checkout)
+    return render_template('thanks.html', results=cart_checkout, cart_stats=cart_stats)
 
 
 @app.route('/checkout')
