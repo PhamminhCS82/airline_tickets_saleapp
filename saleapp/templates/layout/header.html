@@ -37,35 +37,39 @@
                         Đặt vé
                     </a>
                 </li>
+                {% if current_user.is_authenticated and current_user.has_roles() is true %}
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for('schedule') }}">
+                        <i class="fas fa-calendar-check"></i>
+                        Lập lịch
+                    </a>
+                </li>
+                {% endif %}
             </ul>
             <div class="d-flex" style="margin-left: auto">
-                {% if current_user.is_authenticated and current_user.has_roles() is true %}
-                <div>
-                    <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
-                    <a class="nav-link" href="{{ url_for('schedule') }}">Lập lịch</a>
-                </div>
-                {% elif current_user.is_authenticated %}
-                <div>
-                    <a class="nav-link" href="{{ url_for('history') }}">Lịch sử</a>
-                    <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
-                </div>
+                {% if current_user.is_authenticated %}
+                    <div>
+                        <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
+                    </div>
                 {% else %}
-                <div class="mr-2 btn-primary rounded-pill">
-                    <a class="nav-link text-center"
-                       href="{{ url_for('user_login') }}"
-                       style="color: white; width: 7rem"
-                    >
-                        Đăng nhập
-                    </a>
-                </div>
-                <div class="ml-2 btn-info rounded-pill">
-                    <a class="nav-link text-center"
-                       href="{{ url_for('user_register') }}"
-                       style="color: white; width: 7rem;"
-                    >
-                        Đăng ký
-                    </a>
-                </div>
+                    <div class="mr-2 btn-primary rounded-pill">
+                        <a class="nav-link text-center"
+                           href="{{ url_for('user_login') }}"
+                           style="color: white; width: 7rem"
+                        >
+                            Đăng nhập
+                        </a>
+                    </div>
+                    <div class="ml-2 btn-info rounded-pill">
+                        <a class="nav-link text-center"
+                           href="{{ url_for('user_register') }}"
+                           style="color: white; width: 7rem;"
+                        >
+                            Đăng ký
+                        </a>
+                    </div>
                 {% endif %}
             </div>
         </div>

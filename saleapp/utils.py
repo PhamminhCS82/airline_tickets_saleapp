@@ -1,7 +1,7 @@
 import hashlib
 
-from sqlalchemy import func, extract, or_
 
+from sqlalchemy import func, extract, or_, Date
 from saleapp.models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetail, Ticket, SeatClass
 from saleapp import db
 from flask_login import current_user
@@ -76,7 +76,24 @@ def get_all_schedule():
     return FlightSchedule.query.all()
 
 
+
+def search_flight(departure_airport, destination_airport, flight_datetime, seat_class):
+    schedules = FlightSchedule.query.filter(FlightSchedule.departure_airport.__eq__(departure_airport),
+                                            FlightSchedule.destination_airport.__eq__(destination_airport),
+                                            FlightSchedule.flight_datetime.cast(Date).__eq__(flight_datetime)).all()
+
+    seat_quantity = db.session.query(func.count(TicketDetail.ticket_id))\
+        .join(Ticket.Ticket.id.__eq__(TicketDetail.ticket_id))\
+        .join(FlightSchedule.id.__eq__(Ticket.flight_id)).filter()
+
+    print(seat_quantity)
+    return seat_quantity, schedules
+
+
+
+
 def add_receipt(cart, user):
+
     if cart:
         receipt = Receipt(user=user, quantity=len(cart))
         db.session.add(receipt)
@@ -155,3 +172,4 @@ def read_receipt():
 
 def read_seat():
     return SeatClass.query.all()
+

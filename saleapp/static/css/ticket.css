@@ -2,7 +2,6 @@
     height: 48vh;
     overflow-y: scroll;
     width: 100%;
-    background-color: aqua;
 }
 
 .list-flight::-webkit-scrollbar {

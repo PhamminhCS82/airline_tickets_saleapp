@@ -70,19 +70,21 @@ def user_register():
                 if existed_user:
                     error_message = 'Username đã tồn tại!'
                 else:
-                    image = request.files.get('user-image')
-                    if image:
-                        response = cloudinary.uploader.upload(image)
-                        image_path = response['secure_url']
-                    utils.add_user(last_name=last_name.strip(),
-                                   first_name=first_name.strip(),
-                                   user_name=user_name.strip(),
-                                   password=password.strip(),
-                                   email=email.strip(),
-                                   telephone=telephone,
-                                   passport=passport,
-                                   image=image_path)
-                    return redirect(url_for('user_login'))
+                  image = request.files.get('user-image')
+                  if image:
+                      response = cloudinary.uploader.upload(image)
+                      image_path = response['secure_url']
+                  else:
+                      image_path = 'https://res.cloudinary.com/dnwauajh9/image/upload/v1641046577/xlq16tk1iswnjeqfv4z4.jpg'
+                  utils.add_user(last_name=last_name.strip(),
+                                 first_name=first_name.strip(),
+                                 user_name=user_name.strip(),
+                                 password=password.strip(),
+                                 email=email.strip(),
+                                 telephone=telephone,
+                                 passport=passport,
+                                 image=image_path)
+                  return redirect(url_for('user_login'))
 
             else:
                 error_message = 'Mật khẩu không trùng nhau!'
@@ -97,11 +99,35 @@ def contact_us():
     return render_template('contact.html')
 
 
-@app.route('/ticket')
+@app.route('/ticket', methods=['get', 'post'])
 def book_ticket():
     airports = utils.read_airport()
-    schedules = utils.get_all_schedule()
-    return render_template('ticket.html', airports=airports, schedules=schedules)
+    error_message = ''
+
+    try:
+        if request.method.__eq__('POST'):
+            departure = request.form.get('departure')
+            destination = request.form.get('destination')
+            datetime = request.form.get('datetime')
+            seat_class = request.form.get('seat-class')
+            if departure.strip().__eq__(destination.strip()):
+                error_message = 'Điểm khởi hành không thể trùng với điểm đến'
+            else:
+                result = utils.search_flight(departure_airport=departure.strip(),
+                                                destination_airport=destination.strip(),
+                                                flight_datetime=datetime.strip(),
+                                                seat_class=seat_class.strip())
+                schedules = result[1]
+                seat_quantity = result[0]
+                print(seat_quantity)
+                if schedules:
+                    return render_template('ticket.html', airports=airports, schedules=schedules)
+                error_message = 'Hiện tại chưa có chuyến bay này!'
+
+    except Exception as ex:
+        error_message = 'Hệ thống đã xảy ra lỗi: ' + str(ex)
+
+    return render_template('ticket.html', airports=airports, error_message=error_message )
 
 
 @app.route('/type-form', methods=['get', 'post'])
@@ -305,6 +331,11 @@ def common_response():
     return {
         'cart_stats': utils.cart_stats(session.get('cart'))
     }
+
+
+@app.route('/404')
+def not_allowed():
+    return render_template('404.html')
 
 
 if __name__ == '__main__':
