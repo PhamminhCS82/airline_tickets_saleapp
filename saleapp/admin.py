@@ -1,10 +1,11 @@
-from saleapp import app
+from saleapp import app, utils
 from flask_admin.contrib.sqla import ModelView
 from saleapp import db
-from models import User, UserRole
+from saleapp.models import UserRole, User, FlightSchedule, Airport, IntermediateAirport, SeatClass, Ticket
 from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask import redirect, request, url_for
 from flask_login import logout_user, current_user
+from datetime import datetime
 
 
 class AuthenticatedView(ModelView):
@@ -34,6 +35,23 @@ class MyAdminIndexView(AdminIndexView):
         return redirect(login_url)
 
 
+class StatsView(BaseView):
+    @expose('/')
+    def index(self):
+        kw = request.args.get('kw')
+        from_date = request.args.get('from_date')
+        to_date = request.args.get('to_date')
+        year = request.args.get('year', datetime.now().year)
+        return self.render('admin/stats.html',
+                           flight_amount_stats=utils.flight_stats(kw,from_date,to_date),
+                           flight_count=utils.flight_count(),
+                           month_stats=utils.flight_month_stats(year=year))
+
+    def is_accessible(self):
+        return current_user.is_authenticated and \
+               current_user.user_role == UserRole.ADMIN
+
+
 admin = Admin(app=app,
               name="Administrator",
               template_mode='bootstrap4',
@@ -41,4 +59,10 @@ admin = Admin(app=app,
 
 
 admin.add_view(AuthenticatedView(User, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(FlightSchedule, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(SeatClass, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(Ticket, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(IntermediateAirport, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(AuthenticatedView(Airport, db.session, menu_icon_type='fa', menu_icon_value='fa-user'))
+admin.add_view(StatsView(name='Stats', menu_icon_type='fa',menu_icon_value='fa-user'))
 admin.add_view(LogoutView(name='Signout', menu_icon_type='fa', menu_icon_value='fa-sign-out'))

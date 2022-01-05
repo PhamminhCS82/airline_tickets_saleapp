@@ -1,10 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<nav class="navbar navbar-expand-lg navbar-light shadow" style="background-color: white">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">OU Airline</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link"
+                       href="{{ url_for('index') }}"
+                    >
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for('contact_us') }}"
+                    >
+                        <i class="fas fa-phone-volume"></i>
+                        Liên hệ
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{{ url_for('book_ticket') }}"
+                    >
+                        <i class="fas fa-plane-departure"></i>
+                        Đặt vé
+                    </a>
+                </li>
+            </ul>
+            <div class="d-flex" style="margin-left: auto">
+                {% if current_user.is_authenticated and current_user.has_roles() is true %}
+                <div>
+                    <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
+                    <a class="nav-link" href="{{ url_for('schedule') }}">Lập lịch</a>
+                </div>
+                {% elif current_user.is_authenticated %}
+                <div>
+                    <a class="nav-link" href="{{ url_for('history') }}">Lịch sử</a>
+                    <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
+                </div>
+                {% else %}
+                <div class="mr-2 btn-primary rounded-pill">
+                    <a class="nav-link text-center"
+                       href="{{ url_for('user_login') }}"
+                       style="color: white; width: 7rem"
+                    >
+                        Đăng nhập
+                    </a>
+                </div>
+                <div class="ml-2 btn-info rounded-pill">
+                    <a class="nav-link text-center"
+                       href="{{ url_for('user_register') }}"
+                       style="color: white; width: 7rem;"
+                    >
+                        Đăng ký
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

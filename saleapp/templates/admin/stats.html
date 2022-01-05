@@ -1,0 +1,220 @@
+{% extends 'admin/master.html' %}
+
+{% block head_css %}
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+{% if current_user.is_authenticated %}
+<h1 class="text-center text-danger">THỐNG KÊ DOANH THU</h1>
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Mã tuyến bay</th>
+                <th>Doanh thu</th>
+                <th>Sô chuyến</th>
+            </tr>
+            {% for s in flight_amount_stats %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>
+                    {% if s[1] %}
+                    {{ "{:,.1f}".format(s[1]) }} VND
+                    {% else %}
+                    0 VND
+                    {% endif %}
+                    {% for c in flight_count %}
+                    {% if c[0].__eq__(s[0]) %}
+                    <td>{{ c[1] }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    </div>
+    <div class="col-md-5 col-xs-12">
+        <form>
+            <div class="form-group">
+                <input type="text" class="form-control" name="kw" placeholder="Nhap tu khoa..."/>
+            </div>
+            <div class="form-group">
+                <input type="date" class="form-control" name="from_date"/>
+            </div>
+            <div class="form-group">
+                <input type="date" class="form-control" name="to_date"/>
+            </div>
+            <input type="submit" value="Thong ke" class="btn btn-info"/>
+        </form>
+
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+            <tr>
+                <th>Thang</th>
+                <th>Doanh thu</th>
+            </tr>
+            {% for s in month_stats %}
+            <tr>
+                <td>{{ s[0] }}</td>
+                <td>{{ "{:,.1f}".format(s[1]) }} VND</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-5 col-xs-12">
+        <form>
+            <div class="form-group">
+                <input type="number" min="2000"
+                       name="year"
+                       class="form-control"
+                       placeholder="Nhap nam..."/>
+            </div>
+            <input type="submit" value="Thong ke" class="btn btn-danger"/>
+        </form>
+        <canvas id="monthChartId"></canvas>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let labels = [], labels2 = []
+    let totalPrice = [], countF = []
+    {% for s in flight_amount_stats %}
+    {% if s[1] %}
+    labels.push('{{s[0]}}')
+    totalPrice.push({{ s[1] }})
+    {% endif %}
+    {% endfor %}
+    amount = totalPrice.reduce((a, b) => a + b, 0)
+    {% for s in flight_amount_stats %}
+
+    countF.push({{ s[1] }} / amount * 100)
+    {% endfor %}
+    // setup
+    const data = {
+      labels: labels,
+      datasets: [{
+        type: 'bar',
+        label: 'Doanh thu',
+        data: totalPrice,
+        yAxisID: 'totalP',
+        backgroundColor: [
+          'rgba(255, 26, 104, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(0, 0, 0, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 26, 104, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(0, 0, 0, 1)'
+        ],
+        borderWidth: 1
+      },{
+        type: 'line',
+        label: 'Tỷ lệ',
+        data: countF,
+        yAxisID: 'counter',
+        backgroundColor: [
+          'rgba(0, 0, 0, 0.2)'
+        ],
+        borderColor: [
+          'rgba(0, 0, 0, 1)'
+        ],
+        borderWidth: 1
+      }]
+    };
+
+    // config
+    const config = {
+      data,
+      options: {
+        scales: {
+          counter: {
+            type: 'linear',
+            position: 'right',
+            grid: {
+                display: false
+            }
+          },
+          totalP: {
+            type: 'linear',
+            position: 'left'
+          }
+        }
+      }
+    };
+
+    // render init block
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+
+
+</script>
+<script>
+    month_labels = []
+    let month_data = []
+    let colors = []
+    let borderColors = []
+    let r, g, b;
+
+    {% for s in month_stats %}
+
+    month_labels.push({{s[0]}})
+    month_data.push({{ s[1] }})
+
+    r = parseInt(Math.random() * 255)
+    g = parseInt(Math.random() * 255)
+    b = parseInt(Math.random() * 255)
+    colors.push(`rgba(${r}, ${g}, ${b}, 0.2)`)
+    borderColors.push(`rgba(${r}, ${g}, ${b}, 1)`)
+
+    {% endfor %}
+
+    window.onload = function() {
+        const ctx = document.getElementById('monthChartId').getContext('2d')
+        loadChart(ctx, month_labels, month_data, 'bar', colors, borderColors)
+    }
+
+function loadChart(ctx, labels, data, type, colors, borderColors) {
+    const myChart = new Chart(ctx, {
+        type: type,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Thong ke doanh thu',
+                data: data,
+                backgroundColor: colors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+</script>
+
+{% endif %}
+{% endblock %}

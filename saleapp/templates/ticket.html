@@ -1,0 +1,91 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đặt vé{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ticket.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid d-flex align-items-center"
+         style="background-image: url('static/images/jet_herd.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 84vh"
+    >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="d-flex justify-content-center shadow"
+                         style="border-radius: 10px;
+                                backdrop-filter: blur(10px);
+                                background-color: rgba(255, 255, 255, 0.3);
+                                height: 51vh"
+                    >
+                        <div class="form-container mt-5 mb-5" style="width: 96%">
+                            <form method="get" action="">
+                                <div class="form-group d-flex justify-content-between">
+                                    <label class="font-weight-bold">
+                                        <i class="fa fa-plane" aria-hidden="true"></i>
+                                        Điểm khởi hành:
+                                    </label>
+                                    <input type="text" required name="" placeholder="Điểm khởi hành">
+                                </div>
+                                <div class="form-group d-flex justify-content-between">
+                                    <label class="font-weight-bold">
+                                        <i class="fas fa-plane-arrival"></i>
+                                        Điểm đến:
+                                    </label>
+                                    <input type="text" required name="" placeholder="Điểm đến">
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold"
+                                           style="width: 143px">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Ngày đi:
+                                    </label>
+                                    <input type="date" required name="">
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold"
+                                           style="width: 143px"
+                                    >
+                                        <i class="fas fa-couch"></i>
+                                        Hạng ghế:
+                                    </label>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option value="1" selected>Hạng thương gia</option>
+                                        <option value="2">Hạng phổ thông</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2 mt-2">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                    Tìm chuyến bay
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 d-flex align-items-center"
+                     style="border-radius: 10px;
+                            backdrop-filter: blur(10px);
+                            background-color: rgba(255, 255, 255, 0.3);
+                            height: 51vh"
+                >
+                    <div class="list-flight">
+                        <h3>Hiển thị các chuyến bay</h3>
+                        {% for s in schedules %}
+                        <div style="background-color: white">
+                            {{s.id}}
+                            <a class="nav-link" href="/cart?flight_id={{s.id}}">Đặt vé</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

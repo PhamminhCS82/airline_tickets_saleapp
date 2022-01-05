@@ -1,0 +1,79 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Thông tin về chúng tôi{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-bottom: 42px;">
+        <h1 class="mx-auto mt-3">Thông tin thành viên</h1>
+        <div class="row d-flex justify-content-around mt-4">
+            <div class="col-md-4 rounded">
+                <div class="shadow p-2">
+                    <img src="{{ url_for('static', filename='images/tqk.jpg') }}"
+                         alt="Tất Quảng Kiệt"
+                         style="height: 18rem;
+                            width: 100%;"
+                    >
+                    <h4 class="text-center p-1">Tất Quảng Kiệt</h4>
+                    <h5 class="text-center">1851010062</h5>
+                    <div class="text-center">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                        1851010062kiet@ou.edu.vn
+                    </div>
+                    <div class="d-flex justify-content-around mx-auto"
+                         style="margin: 16px 0px;
+                         width: 60%"
+                    >
+                        <a href="https://github.com/tatquangkiet789" target="_blank">
+                            <i class="fa fa-github-square"
+                           style="font-size: 40px"
+                           aria-hidden="true"
+                            ></i>
+                        </a>
+                        <a href="https://www.facebook.com/quangkiet.tat.1/" target="_blank">
+                            <i class="fa fa-facebook-official"
+                               style="font-size: 40px"
+                               aria-hidden="true"
+                            ></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 rounded">
+                <div class="shadow p-2">
+                    <img src="{{ url_for('static', filename='images/pqm.jpg') }}"
+                         alt="Phạm Quang Minh"
+                         style="height: 18rem;
+                            width: 100%;"
+                    >
+                    <h4 class="text-center p-1">Phạm Quang Minh</h4>
+                    <h5 class="text-center">1851010075</h5>
+                    <div class="text-center">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                        1851010075minh@ou.edu.vn
+                    </div>
+                    <div class="d-flex justify-content-around mx-auto"
+                         style="margin: 16px 0px;
+                         width: 60%"
+                    >
+                        <a href="https://github.com/PhamminhCS82" target="_blank">
+                            <i class="fa fa-github-square"
+                           style="font-size: 40px"
+                           aria-hidden="true"
+                            ></i>
+                        </a>
+                        <a href="https://www.facebook.com/minh.phamquang.9883" target="_blank">
+                            <i class="fa fa-facebook-official"
+                               style="font-size: 40px"
+                               aria-hidden="true"
+                            ></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
