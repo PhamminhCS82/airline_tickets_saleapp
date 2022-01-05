@@ -1,0 +1,35 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Thành công{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+<h1>{{results}}</h1>
+    <table class="table" id="table">
+
+        <tr>
+            <th>Hành khách</th>
+            <th>CMND/CCCD</th>
+            <th>Điện thoại</th>
+            <th>Hạng vé</th>
+            <th>Giá tiền</th>
+        </tr>
+
+        {% for c in results %}
+        <tr>
+            <td>{{c.name}}</td>
+            <td>{{c.passport}}</td>
+            <td>{{c.telephone}}</td>
+            <td>{{c.ticket_class}}</td>
+            <td>{{c.price}}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    <div class="alert alert-info">
+        <h5>Tong san pham: <span id="cartCounter2">{{ cart_stats.total_quantity }}</span></h5>
+        <h5>Tong tien: <span id="cartAmount">{{ "{:,.1f}".format(cart_stats.total_amount) }}</span> VND</h5>
+    </div>
+</div>
+{% endblock %}

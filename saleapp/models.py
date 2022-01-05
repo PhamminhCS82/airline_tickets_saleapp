@@ -20,14 +20,16 @@ class UserRole(UserEnum):
 
 
 class User(BaseModel, UserMixin):
+    __table_args__ = {'extend_existing': True}
+
     last_name = Column(String(50), nullable=False)
     first_name = Column(String(100), nullable=False)
     user_name = Column(String(100), nullable=True, unique=True)
     password = Column(String(100), nullable=True)
     email = Column(String(100), unique=True, nullable=False)
     create_date = Column(DateTime, default=datetime.now())
-    phone_number = Column(Integer, nullable=False)
-    passport = Column(Integer, unique=True, nullable=False)
+    phone_number = Column(String(11), nullable=False)
+    passport = Column(String(11), unique=True, nullable=False)
     image = Column(String(100))
     active = Column(Boolean, default=True)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
@@ -67,7 +69,10 @@ class SeatClass(BaseModel):
 
     name = Column(String(100), nullable=False)
     price = Column(Float, nullable=False)
-    seat_class = relationship('Ticket', backref='seat_class', lazy=True)
+    seat_class = relationship('Ticket', back_populates='ticket_class', lazy=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Ticket(BaseModel):
@@ -77,7 +82,7 @@ class Ticket(BaseModel):
     flight_id = Column(String(20), ForeignKey(FlightSchedule.id), primary_key=True)
     seat_quantity = Column(Integer, nullable=False, default=0)
     price = Column(Float, default=0)
-    ticket_class = relationship(SeatClass, backref='ticket', lazy=True)
+    ticket_class = relationship(SeatClass, back_populates='seat_class', lazy=True)
     ticket_details = relationship('TicketDetail', backref='ticket', lazy=True)
 
 
@@ -103,8 +108,8 @@ class TicketDetail(BaseModel):
     receipt_id = Column(Integer, ForeignKey(Receipt.id), nullable=False)
     ticket_id = Column(Integer, ForeignKey(Ticket.id), nullable=False)
     user_name = Column(String(100), nullable=False)
-    passport = Column(Integer, nullable=False)
-    telephone = Column(Integer, nullable=False)
+    passport = Column(String(11), nullable=False)
+    telephone = Column(String(11), nullable=False)
     ticket_class = Column(String(100), nullable=False)
     price = Column(Float, default=0)
 
