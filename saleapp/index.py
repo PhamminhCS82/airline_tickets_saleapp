@@ -104,12 +104,17 @@ def book_ticket():
             departure = request.form.get('departure')
             destination = request.form.get('destination')
             datetime = request.form.get('datetime')
+            seat_class = request.form.get('seat-class')
             if departure.strip().__eq__(destination.strip()):
                 error_message = 'Điểm khởi hành không thể trùng với điểm đến'
             else:
-                schedules = utils.search_flight(departure_airport=departure.strip(),
+                result = utils.search_flight(departure_airport=departure.strip(),
                                                 destination_airport=destination.strip(),
-                                                flight_datetime=datetime)
+                                                flight_datetime=datetime.strip(),
+                                                seat_class=seat_class.strip())
+                schedules = result[1]
+                seat_quantity = result[0]
+                print(seat_quantity)
                 if schedules:
                     return render_template('ticket.html', airports=airports, schedules=schedules)
                 error_message = 'Hiện tại chưa có chuyến bay này!'
@@ -233,6 +238,11 @@ def add_ticket_detail():
 @app.route('/cart')
 def cart():
     return render_template('cart.html')
+
+
+@app.route('/404')
+def not_allowed():
+    return render_template('404.html')
 
 
 if __name__ == '__main__':
