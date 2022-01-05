@@ -46,6 +46,7 @@
                 </div>
                 {% elif current_user.is_authenticated %}
                 <div>
+                    <a class="nav-link" href="{{ url_for('history') }}">Lịch sử</a>
                     <a class="nav-link" href="{{ url_for('user_logout') }}">Đăng xuất</a>
                 </div>
                 {% else %}

@@ -85,5 +85,33 @@
             </div>
         </div>
     </div>
+
+
+</div>
+<br><br><br>
+<div class="container">
+    <h1 class="text-center text-info">Danh sách lịch</h1>
+    <table class="table" id="table">
+        <tr>
+            <th>Mã chuyến bay</th>
+            <th>Nơi đi</th>
+            <th>Nơi đến</th>
+            <th>Ngày - giờ</th>
+            <th>Thời gian bay</th>
+        </tr>
+
+        {% for r in all_schedule %}
+        <tr>
+            <td>{{r.id}}</td>
+            <td>{{r.departure_airport}}</td>
+            <td>{{r.destination_airport}}</td>
+            <td>{{r.flight_datetime}}</td>
+            <td>{{r.flight_time}}</td>
+            <td><a class="nav-link" href="/schedule-detail-seat?flight_id={{r.id}}">Thêm ghế</a></td>
+            <td><a class="nav-link" href="/schedule-detail-airport?flight_id={{r.id}}">Thêm sân bay</a></td>
+        </tr>
+        {% endfor %}
+
+    </table>
 </div>
 {% endblock %}

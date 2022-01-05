@@ -2,8 +2,9 @@ import hashlib
 
 from sqlalchemy import func, extract, or_
 
-from saleapp.models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetail, Ticket
+from saleapp.models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetail, Ticket, SeatClass
 from saleapp import db
+from flask_login import current_user
 
 
 def check_login(user_name, password, role=UserRole.USER):
@@ -62,6 +63,12 @@ def add_schedule(id, departure, destination, flight_datetime, flight_time):
                                   flight_datetime=flight_datetime,
                                   flight_time=flight_time)
     db.session.add(new_schedule)
+    db.session.commit()
+
+
+def add_seat_schedule(flight_id, price, seat_class, quantity):
+    new_schedule_seat = Ticket(flight_id=flight_id, price=price, seat_class_id=seat_class, seat_quantity=quantity)
+    db.session.add(new_schedule_seat)
     db.session.commit()
 
 
@@ -140,3 +147,11 @@ def flight_month_stats(year):
             .filter(extract('year', FlightSchedule.flight_datetime) == year)\
             .group_by(extract('month', FlightSchedule.flight_datetime))\
             .order_by(extract('month', FlightSchedule.flight_datetime)).all()
+
+
+def read_receipt():
+    return Receipt.query.filter(Receipt.user_id.__eq__(current_user.id)).all()
+
+
+def read_seat():
+    return SeatClass.query.all()

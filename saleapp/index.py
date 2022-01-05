@@ -5,6 +5,7 @@ from saleapp import login
 import cloudinary.uploader
 from saleapp.admin import *
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -133,6 +134,7 @@ def guest_register():
 @login_required
 def schedule():
     airports = utils.read_airport()
+
     error_message = ""
     if request.method.__eq__('POST'):
         flight_id = request.form.get('flight-id')
@@ -143,11 +145,38 @@ def schedule():
 
         try:
             utils.add_schedule(flight_id, departure, destination, flight_datetime, flight_time)
-            return redirect(url_for('index'))
+            return redirect(url_for('schedule'))
         except Exception as ex:
             error_message = 'Đã xảy ra lỗi trong quá trình đăng ký!' + str(ex)
 
-    return render_template('schedule.html', airports=airports, error_message=error_message)
+    return render_template('schedule.html', airports=airports, error_message=error_message,
+                           all_schedule=utils.get_all_schedule())
+
+
+@app.route("/schedule-detail-airport")
+def schedule_detail_airport():
+    flight_id = request.args.get('flight_id')
+    return render_template("schedule-detail.html", flight_id=flight_id)
+
+
+@app.route("/schedule-detail-seat", methods=['get', 'post'])
+def schedule_add_seat():
+    error_message = ""
+    if request.method.__eq__('POST'):
+        flight_id = request.form.get('flight-id')
+        seat_class = request.form.get('seat_class')
+        price = request.form.get('price')
+        quantity = request.form.get('quantity')
+
+        try:
+            utils.add_seat_schedule(flight_id, price, seat_class, quantity)
+            return redirect(url_for('index'))
+        except Exception as ex:
+            error_message = 'Đã xảy ra lỗi trong quá thêm!' + str(ex)
+    return render_template("schedule-seat.html",
+                           flight_id=request.args.get('flight_id'),
+                           seats=utils.read_seat(),
+                           error_message=error_message)
 
 
 @app.route('/api/add-ticket', methods=['post'])
@@ -263,6 +292,12 @@ def thanks():
 @app.route('/checkout')
 def checkout():
     return render_template('checkout.html')
+
+
+@app.route('/history')
+@login_required
+def history():
+    return render_template('history.html', receipts=utils.read_receipt())
 
 
 @app.context_processor

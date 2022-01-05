@@ -1,0 +1,27 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Lịch sử mua vé{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="text-center text-info">Đơn mua vé</h1>
+    <table class="table" id="table">
+
+        <tr>
+            <th>Mã đơn hàng</th>
+            <th>Ngày mua</th>
+            <th>Số lượng</th>
+        </tr>
+
+        {% for r in receipts %}
+        <tr>
+            <td>{{r.id}}</td>
+            <td>{{r.created_date}}</td>
+            <td>{{r.quantity}}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+{% endblock %}
