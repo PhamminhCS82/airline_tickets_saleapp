@@ -1,8 +1,8 @@
 import hashlib
 
-
 from sqlalchemy import func, extract, or_, Date
-from saleapp.models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetail, Ticket, SeatClass
+from saleapp.models import User, UserRole, Airport, FlightSchedule, Receipt, TicketDetail, Ticket, SeatClass, \
+    IntermediateAirport
 from saleapp import db
 from flask_login import current_user
 
@@ -72,8 +72,34 @@ def add_seat_schedule(flight_id, price, seat_class, quantity):
     db.session.commit()
 
 
+def add_inter_airport(flight_id, airport_id, delayed, note):
+    new_inter_airport = IntermediateAirport(flight_id=flight_id, airport_id=airport_id, delayed=delayed, note=note)
+    db.session.add(new_inter_airport)
+    db.session.commit()
+
+
 def get_all_schedule():
     return FlightSchedule.query.all()
+
+
+def get_all_schedule_seat(flight_id):
+    return Ticket.query.filter(Ticket.flight_id.__eq__(flight_id)).all()
+
+
+def check_same_inter_airport(flight_id, airport_id):
+    a = db.session.query(FlightSchedule.id, FlightSchedule.departure_airport,
+                         FlightSchedule.departure_airport, IntermediateAirport.airport_id) \
+        .join(IntermediateAirport, IntermediateAirport.flight_id.__eq__(FlightSchedule.id)) \
+        .filter(FlightSchedule.id.__eq__(flight_id), or_(FlightSchedule.departure_airport.__eq__(airport_id),
+                                                         FlightSchedule.destination_airport.__eq__(airport_id),
+                                                         IntermediateAirport.airport_id.__eq__(airport_id)))
+    return a.all()
+
+
+def check_same_airport(flight_id, airport_id):
+    return FlightSchedule.query.filter(FlightSchedule.id.__eq__(flight_id),
+                                       or_(FlightSchedule.departure_airport.__eq__(airport_id),
+                                           FlightSchedule.destination_airport.__eq__(airport_id))).all()
 
 
 def search_flight(departure_airport, destination_airport, flight_datetime, seat_class):
@@ -90,7 +116,6 @@ def search_flight(departure_airport, destination_airport, flight_datetime, seat_
 
 
 def add_receipt(cart, user):
-
     if cart:
         receipt = Receipt(user=user, quantity=len(cart))
         db.session.add(receipt)
@@ -130,12 +155,13 @@ def load_flight(flight_id):
 def flight_stats(kw=None, from_date=None, to_date=None):
     f = db.session.query(func.concat(FlightSchedule.departure_airport, ' - ', FlightSchedule.destination_airport),
                          func.sum(TicketDetail.price)) \
-        .join(Ticket, Ticket.flight_id.__eq__(FlightSchedule.id))\
-        .join(TicketDetail, TicketDetail.ticket_id.__eq__(Ticket.id))\
+        .join(Ticket, Ticket.flight_id.__eq__(FlightSchedule.id)) \
+        .join(TicketDetail, TicketDetail.ticket_id.__eq__(Ticket.id)) \
         .group_by(FlightSchedule.departure_airport, FlightSchedule.destination_airport)
 
     if kw:
-        f = f.filter(or_(FlightSchedule.departure_airport.contains(kw), FlightSchedule.destination_airport.contains(kw)))
+        f = f.filter(
+            or_(FlightSchedule.departure_airport.contains(kw), FlightSchedule.destination_airport.contains(kw)))
 
     if from_date:
         f = f.filter(FlightSchedule.flight_datetime.__ge__(from_date))
@@ -148,7 +174,7 @@ def flight_stats(kw=None, from_date=None, to_date=None):
 
 def flight_count():
     f = db.session.query(func.concat(FlightSchedule.departure_airport, ' - ', FlightSchedule.destination_airport),
-                         func.count(FlightSchedule.id))\
+                         func.count(FlightSchedule.id)) \
         .group_by(FlightSchedule.departure_airport, FlightSchedule.destination_airport)
     return f.all()
 
@@ -156,11 +182,11 @@ def flight_count():
 def flight_month_stats(year):
     return db.session.query(extract('month', FlightSchedule.flight_datetime),
                             func.sum(TicketDetail.price)) \
-            .join(Ticket, Ticket.flight_id.__eq__(FlightSchedule.id)) \
-            .join(TicketDetail, TicketDetail.ticket_id.__eq__(Ticket.id))\
-            .filter(extract('year', FlightSchedule.flight_datetime) == year)\
-            .group_by(extract('month', FlightSchedule.flight_datetime))\
-            .order_by(extract('month', FlightSchedule.flight_datetime)).all()
+        .join(Ticket, Ticket.flight_id.__eq__(FlightSchedule.id)) \
+        .join(TicketDetail, TicketDetail.ticket_id.__eq__(Ticket.id)) \
+        .filter(extract('year', FlightSchedule.flight_datetime) == year) \
+        .group_by(extract('month', FlightSchedule.flight_datetime)) \
+        .order_by(extract('month', FlightSchedule.flight_datetime)).all()
 
 
 def read_receipt():
@@ -169,4 +195,3 @@ def read_receipt():
 
 def read_seat():
     return SeatClass.query.all()
-

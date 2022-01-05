@@ -113,13 +113,13 @@ def book_ticket():
             if departure.strip().__eq__(destination.strip()):
                 error_message = 'Điểm khởi hành không thể trùng với điểm đến'
             else:
-                result = utils.search_flight(departure_airport=departure.strip(),
+                schedules = utils.search_flight(departure_airport=departure.strip(),
                                                 destination_airport=destination.strip(),
                                                 flight_datetime=datetime.strip(),
                                                 seat_class=seat_class.strip())
-                schedules = result[1]
-                seat_quantity = result[0]
-                print(seat_quantity)
+                # schedules = result[1]
+                # seat_quantity = result[0]
+                # print(seat_quantity)
                 if schedules:
                     return render_template('ticket.html', airports=airports, schedules=schedules)
                 error_message = 'Hiện tại chưa có chuyến bay này!'
@@ -159,50 +159,75 @@ def guest_register():
 @app.route('/schedule', methods=['get', 'post'])
 @login_required
 def schedule():
-    airports = utils.read_airport()
+    if current_user.has_roles() is True:
+        airports = utils.read_airport()
+        error_message = ""
+        if request.method.__eq__('POST'):
+            flight_id = request.form.get('flight-id')
+            departure = request.form.get('departure')
+            destination = request.form.get('destination')
+            flight_datetime = request.form.get('flight-datetime')
+            flight_time = request.form.get('flight-time')
 
-    error_message = ""
-    if request.method.__eq__('POST'):
-        flight_id = request.form.get('flight-id')
-        departure = request.form.get('departure')
-        destination = request.form.get('destination')
-        flight_datetime = request.form.get('flight-datetime')
-        flight_time = request.form.get('flight-time')
-
-        try:
-            utils.add_schedule(flight_id, departure, destination, flight_datetime, flight_time)
-            return redirect(url_for('schedule'))
-        except Exception as ex:
-            error_message = 'Đã xảy ra lỗi trong quá trình đăng ký!' + str(ex)
-
-    return render_template('schedule.html', airports=airports, error_message=error_message,
-                           all_schedule=utils.get_all_schedule())
+            try:
+                utils.add_schedule(flight_id, departure, destination, flight_datetime, flight_time)
+                return redirect(url_for('schedule'))
+            except Exception as ex:
+                error_message = 'Đã xảy ra lỗi trong quá trình đăng ký!' + str(ex)
+        return render_template('schedule.html', airports=airports, error_message=error_message,
+                               all_schedule=utils.get_all_schedule())
+    return render_template("404.html")
 
 
-@app.route("/schedule-detail-airport")
+@app.route("/schedule-detail-airport", methods=['post', 'get'])
+@login_required
 def schedule_detail_airport():
-    flight_id = request.args.get('flight_id')
-    return render_template("schedule-detail.html", flight_id=flight_id)
+    if current_user.has_roles() is True:
+
+        error_message = ""
+        if request.method.__eq__('POST'):
+            flight_id = request.form.get('flight-id')
+            airport_id = request.form.get('intermediate')
+            delayed = request.form.get('delayed')
+            note = request.form.get('note')
+            try:
+                if utils.check_same_airport(flight_id=flight_id, airport_id=airport_id) or utils.check_same_inter_airport(flight_id=flight_id, airport_id=airport_id):
+                    error_message = 'Trùng sân bay rồi'
+                    return render_template("schedule-detail.html", flight_id=flight_id,
+                                    airports=utils.read_airport(),
+                                    error_message=error_message)
+                utils.add_inter_airport(flight_id, airport_id, delayed, note)
+                return redirect(url_for('schedule'))
+            except Exception as ex:
+                error_message = 'Đã xảy ra lỗi trong quá thêm!' + str(ex)
+        return render_template("schedule-detail.html", flight_id=request.args.get('flight_id'),
+                               airports=utils.read_airport(),
+                               error_message=error_message)
+    return render_template("404.html")
 
 
 @app.route("/schedule-detail-seat", methods=['get', 'post'])
+@login_required
 def schedule_add_seat():
-    error_message = ""
-    if request.method.__eq__('POST'):
-        flight_id = request.form.get('flight-id')
-        seat_class = request.form.get('seat_class')
-        price = request.form.get('price')
-        quantity = request.form.get('quantity')
+    if current_user.has_roles() is True:
 
-        try:
-            utils.add_seat_schedule(flight_id, price, seat_class, quantity)
-            return redirect(url_for('index'))
-        except Exception as ex:
-            error_message = 'Đã xảy ra lỗi trong quá thêm!' + str(ex)
-    return render_template("schedule-seat.html",
-                           flight_id=request.args.get('flight_id'),
-                           seats=utils.read_seat(),
-                           error_message=error_message)
+        error_message = ""
+        if request.method.__eq__('POST'):
+            flight_id = request.form.get('flight-id')
+            seat_class = request.form.get('seat_class')
+            price = request.form.get('price')
+            quantity = request.form.get('quantity')
+            try:
+                utils.add_seat_schedule(flight_id, price, seat_class, quantity)
+                return redirect(url_for('schedule'))
+            except Exception as ex:
+                error_message = 'Đã xảy ra lỗi trong quá thêm!' + str(ex)
+        return render_template("schedule-seat.html",
+                               flight_id=request.args.get('flight_id'),
+                               seats=utils.read_seat(),
+                               all_flight_seats=utils.get_all_schedule_seat(flight_id=request.args.get('flight_id')),
+                               error_message=error_message)
+    return render_template("404.html")
 
 
 @app.route('/api/add-ticket', methods=['post'])

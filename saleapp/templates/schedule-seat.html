@@ -74,7 +74,29 @@
             </div>
         </div>
     </div>
-     
 
+
+</div>
+<br><br><br>
+<div class="container">
+    <h1 class="text-center text-info">Danh sách hạng ghế</h1>
+    <table class="table" id="table">
+        <tr>
+            <th>Mã chuyến bay</th>
+            <th>Hạng ghế</th>
+            <th>Giá tiền</th>
+            <th>Số lượng</th>
+        </tr>
+
+        {% for r in all_flight_seats %}
+        <tr>
+            <td>{{flight_id}}</td>
+            <td>{{r.ticket_class['name']}}</td>
+            <td>{{r.price}}</td>
+            <td>{{r.seat_quantity}}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
 </div>
 {% endblock %}
